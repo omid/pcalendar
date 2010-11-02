@@ -76,7 +76,7 @@ class Calendar
         foreach($s_events as $e){
             if($e['day'] == $today['day']){
                 if(isset($today['holiday']) && $today['holiday'] == false) $today['holiday'] = $e['holiday'];
-                if($today['title']) $today['title'] .= ' / ';
+                if($today['title']) $today['title'] .= "\n";
                 $today['title'] .= $e['title'];
             }
         }
@@ -103,11 +103,11 @@ class Calendar
         $week_names = array('شنبه', 'یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه');
         
         // fill week names
-        for($day=0; $day<7; $day++){
-            $d = new GtkLabel('');
-            $d->set_use_markup(true);
-            $d->set_markup($week_names[$day]);
-            $this->_table->attach($d, abs($day-6), abs($day-6)+1, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
+        for($d=0; $d<7; $d++){
+            $b = new GtkLabel('');
+            $b->set_use_markup(true);
+            $b->set_markup($week_names[$d]);
+            $this->_table->attach($b, abs($d-6), abs($d-6)+1, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
         }
         
         // fill days
@@ -115,23 +115,23 @@ class Calendar
         $y = 1;
         $max_days = persian_calendar::date('t', persian_calendar::mktime(0, 0, 0, $month, 1, $year), false);
         
-        for($day=1; $day<=$max_days; $day++){
-            $weekday = persian_calendar::date('N', persian_calendar::mktime(0, 0, 0, $month, $day, $year), false);
-            $days[$day] = array('x' => abs($weekday-7), 'y' => $y);
-            $today = $this->getEvent($year, $month, $day);
-            $days[$day] = array_merge($days[$day], $today);
+        for($d=1; $d<=$max_days; $d++){
+            $weekday = persian_calendar::date('N', persian_calendar::mktime(0, 0, 0, $month, $d, $year), false);
+            $days[$d] = array('x' => abs($weekday-7), 'y' => $y);
+            $today = $this->getEvent($year, $month, $d);
+            $days[$d] = array_merge($days[$d], $today);
             
-            $d = new GtkToggleButton('');
-            $d->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse("#0000ff"));
+            $b = new GtkToggleButton('');
+            $b->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse("#0000ff"));
             /*$d->modify_bg(Gtk::STATE_ACTIVE,      new GdkColor(255, 255, 255, true));
             $d->modify_bg(Gtk::STATE_PRELIGHT,    new GdkColor(0, 0, 255, true));
             $d->modify_bg(Gtk::STATE_SELECTED,    new GdkColor(0, 255, 255, true));
             $d->modify_bg(Gtk::STATE_INSENSITIVE, new GdkColor(0, 255, 0, true));*/
-            $d->set_focus_on_click(false);
-            $d->set_relief(Gtk::RELIEF_NONE);
-            $d->get_child()->set_use_markup(true);
-            $d->get_child()->set_markup(persian_calendar::persian_no($day) . "  <span color=\"darkgray\"><small><small>$day</small></small></span>");
-            $this->_table->attach($d, $days[$day]['x'], $days[$day]['x']+1, $days[$day]['y'], $days[$day]['y']+1, Gtk::SHRINK, Gtk::SHRINK);
+            $b->set_focus_on_click(false);
+            $b->set_relief(Gtk::RELIEF_NONE);
+            $b->get_child()->set_use_markup(true);
+            $b->get_child()->set_markup(persian_calendar::persian_no($d) . "  <span color=\"darkgray\"><small><small>$d</small></small></span>");
+            $this->_table->attach($b, $days[$d]['x'], $days[$d]['x']+1, $days[$d]['y'], $days[$d]['y']+1, Gtk::SHRINK, Gtk::SHRINK);
             
             // change Y after friday!
             if($weekday == 7) $y++;
@@ -143,7 +143,6 @@ class Calendar
         $l->set_justify(Gtk::JUSTIFY_CENTER);
         $l->set_padding(5, 5);
         $this->_leftmenu->get_child()->pack_start($l, true, true, 5);
-        $l->set_markup("salam\nsalam");
     }
 
     private function createTray()
@@ -176,7 +175,7 @@ class Calendar
         $vbox = new GtkVBox(false, 5);
         $this->_leftmenu->add($vbox);
 
-        $this->renderCalendar(persian_calendar::date('m', '', false), persian_calendar::date('Y', '', false));
+        $this->renderCalendar(persian_calendar::date('Y', '', false), persian_calendar::date('m', '', false), persian_calendar::date('d', '', false));
     }
 
     public function __destruct()
