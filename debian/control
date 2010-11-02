@@ -1,0 +1,13 @@
+Source: pcalendar
+Section: gnome
+Priority: extra
+Maintainer: omidmottaghi <omidmr@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~), po-debconf
+standards-Version: 3.8.3
+Homepage: http://oxygenws.com/pcalendar
+
+Package: pcalendar
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, php5-cairo, php5-gtk2, php5-cli, libbonobo2-0, ttf-dejavu-core, php5-gd, php5-dbus
+Description: Persian Calendar is a calendar for Persians
+ Persian Calendar is a calendar for Persians.

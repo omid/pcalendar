@@ -1,0 +1,27 @@
+<oaf_info>
+<oaf_server iid="OAFIID:GNOME_PCalendar_Factory"
+            type="exe" location="pcalendar.php">
+
+        <oaf_attribute name="repo_ids" type="stringv">
+                <item value="IDL:Bonobo/GenericFactory:1.0"/>
+                <item value="IDL:Bonobo/Unknown:1.0"/>
+        </oaf_attribute>
+        <oaf_attribute name="name" type="string" value="Persian Calendar"/>
+        <oaf_attribute name="description" type="string" _value="Another Calendar for Persians."/>
+</oaf_server>
+
+<oaf_server iid="OAFIID:GNOME_PCalendar"
+            type="factory" location="OAFIID:GNOME_PCalendar_Factory">
+
+        <oaf_attribute name="repo_ids" type="stringv">
+                <item value="IDL:GNOME/Vertigo/PanelAppletShell:1.0"/>
+                <item value="IDL:Bonobo/Control:1.0"/>
+                <item value="IDL:Bonobo/Unknown:1.0"/>
+        </oaf_attribute>
+        <oaf_attribute name="name" type="string" value="Persian Calendar"/>
+        <oaf_attribute name="description" type="string" value="Another Calendar for Persians."/>
+        <oaf_attribute name="panel:category" type="string" value="Utilities"/>
+        <oaf_attribute name="panel:icon" type="string" value="/usr/share/pcalendar/cal.png"/>
+</oaf_server>
+</oaf_info>
+
