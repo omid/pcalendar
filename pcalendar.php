@@ -93,11 +93,13 @@ class Calendar
         $l->set_use_markup(true);
         $l->set_justify(Gtk::JUSTIFY_CENTER);
         $l->set_padding(5, 5);
-        $this->_leftmenu->get_child()->pack_start($l, true, true, 5);
+        $this->_leftmenu->get_child()->pack_start($l, true, true, 0);
         $str = '<b>' . persian_calendar::date('Y/m/d') . '</b>';
         $l->set_markup($str);
         
         $this->_table = new GtkTable();
+        $this->_table->set_col_spacings(0);
+        $this->_table->set_row_spacings(0);
         $this->_leftmenu->get_child()->pack_start($this->_table, true, true, 0);
         
         $week_names = array('شنبه', 'یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه');
@@ -107,7 +109,7 @@ class Calendar
             $b = new GtkLabel('');
             $b->set_use_markup(true);
             $b->set_markup($week_names[$d]);
-            $this->_table->attach($b, abs($d-6), abs($d-6)+1, 0, 1, Gtk::SHRINK, Gtk::SHRINK);
+            $this->_table->attach($b, abs($d-6), abs($d-6)+1, 0, 1, Gtk::FILL, Gtk::FILL, Gtk::FILL, Gtk::FILL);
         }
         
         // fill days
@@ -122,16 +124,25 @@ class Calendar
             $days[$d] = array_merge($days[$d], $today);
             
             $b = new GtkToggleButton('');
-            $b->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse("#0000ff"));
-            /*$d->modify_bg(Gtk::STATE_ACTIVE,      new GdkColor(255, 255, 255, true));
-            $d->modify_bg(Gtk::STATE_PRELIGHT,    new GdkColor(0, 0, 255, true));
-            $d->modify_bg(Gtk::STATE_SELECTED,    new GdkColor(0, 255, 255, true));
-            $d->modify_bg(Gtk::STATE_INSENSITIVE, new GdkColor(0, 255, 0, true));*/
-            $b->set_focus_on_click(false);
-            $b->set_relief(Gtk::RELIEF_NONE);
+            $b->set_can_focus(false);
+            
+            if($days[$d]['holiday']){
+                $b->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#FFEEEE')); // holiday
+                $b->modify_bg(Gtk::STATE_ACTIVE, GdkColor::parse('#FFDDDD')); // holiday
+                $b->modify_bg(Gtk::STATE_PRELIGHT, GdkColor::parse('#FFFEFE')); // holiday / hover
+            } else {
+                $b->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#EEEEFF')); // normal day
+                $b->modify_bg(Gtk::STATE_ACTIVE, GdkColor::parse('#DDDDFF')); // normal day
+                $b->modify_bg(Gtk::STATE_PRELIGHT, GdkColor::parse('#FEFEFF')); // normal day / hover
+            }
+            
+            $b->connect_simple('toggled', array($this, 'notify'), 'تست', 'تست');
             $b->get_child()->set_use_markup(true);
             $b->get_child()->set_markup(persian_calendar::persian_no($d) . "  <span color=\"darkgray\"><small><small>$d</small></small></span>");
-            $this->_table->attach($b, $days[$d]['x'], $days[$d]['x']+1, $days[$d]['y'], $days[$d]['y']+1, Gtk::SHRINK, Gtk::SHRINK);
+            if($day == $d){
+                $b->set_active(true);
+            }
+            $this->_table->attach($b, $days[$d]['x'], $days[$d]['x']+1, $days[$d]['y'], $days[$d]['y']+1);
             
             // change Y after friday!
             if($weekday == 7) $y++;
@@ -141,8 +152,8 @@ class Calendar
         $l = new GtkLabel('', true);
         $l->set_use_markup(true);
         $l->set_justify(Gtk::JUSTIFY_CENTER);
-        $l->set_padding(5, 5);
-        $this->_leftmenu->get_child()->pack_start($l, true, true, 5);
+        $this->_leftmenu->get_child()->pack_start($l, true, true, 0);
+        $l->modify_bg(Gtk::STATE_ACTIVE, GdkColor::parse('#FFCCCC')); // holiday
     }
 
     private function createTray()
@@ -172,7 +183,7 @@ class Calendar
         $this->_leftmenu->set_skip_taskbar_hint(true);
         $this->_leftmenu->set_skip_pager_hint(true);
 
-        $vbox = new GtkVBox(false, 5);
+        $vbox = new GtkVBox();
         $this->_leftmenu->add($vbox);
 
         $this->renderCalendar(persian_calendar::date('Y', '', false), persian_calendar::date('m', '', false), persian_calendar::date('d', '', false));
