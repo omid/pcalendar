@@ -9,6 +9,7 @@ class Calendar
 {
     protected $_rightmenu;
     protected $_leftmenu;
+    protected $_leftmenu_visible = false;
     protected $_tray;
     protected $_date;
     protected $_label;
@@ -19,7 +20,6 @@ class Calendar
         
         $this->createTray();
         $this->createRightMenu();
-        $this->createLeftMenu();
         $this->onDayChange();
         
         Gtk::timeout_add(600000 /* ten minutes */, array($this, 'onDayChange'));
@@ -109,7 +109,7 @@ class Calendar
             $b = new GtkLabel('');
             $b->set_use_markup(true);
             $b->set_markup($week_names[$d]);
-            $this->_table->attach($b, abs($d-6), abs($d-6)+1, 0, 1, Gtk::FILL, Gtk::FILL, Gtk::FILL, Gtk::FILL);
+            $this->_table->attach($b, abs($d-6), abs($d-6)+1, 0, 1);
         }
         
         // fill days
@@ -177,6 +177,8 @@ class Calendar
 
     private function createLeftMenu()
     {
+        if(isset($this->_leftmenu)) $this->_leftmenu->destroy();
+        
         $this->_leftmenu = new GtkWindow();
         $this->_leftmenu->set_position(Gtk::WIN_POS_MOUSE);
         $this->_leftmenu->set_decorated(false);
@@ -206,10 +208,13 @@ class Calendar
 
     public function onLeftMenu()
     {
-        if($this->_leftmenu->is_visible()){
+        if($this->_leftmenu_visible){
             $this->_leftmenu->hide_all();
+            $this->_leftmenu_visible = false;
         } else {
+            $this->createLeftMenu();
             $this->_leftmenu->show_all();
+            $this->_leftmenu_visible = true;
         }
     }
 
