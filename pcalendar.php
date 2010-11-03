@@ -97,24 +97,69 @@ class Calendar
         $str = '<b>' . persian_calendar::date('Y/m/d') . '</b>';
         $l->set_markup($str);
         
-        $this->_table = new GtkTable();
+        $this->_table = new GtkTable(1, 1, true);
         $this->_table->set_col_spacings(0);
         $this->_table->set_row_spacings(0);
         $this->_leftmenu->get_child()->pack_start($this->_table, true, true, 0);
         
         $week_names = array('شنبه', 'یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه');
         
+        // fill changing months and years panel
+        // left of month
+        $i = GtkImage::new_from_stock(Gtk::STOCK_GO_BACK, Gtk::ICON_SIZE_MENU);
+        $b = new GtkButton('');
+        $b->set_can_focus(false);
+        $b->set_image($i);
+        $b->connect_simple('clicked', array($this, 'notify'), 'تست', 'تست');
+        $this->_table->attach($b, 0, 1, 0, 1);
+
+        // right of month
+        $i = GtkImage::new_from_stock(Gtk::STOCK_GO_FORWARD, Gtk::ICON_SIZE_MENU);
+        $b = new GtkButton('');
+        $b->set_can_focus(false);
+        $b->set_image($i);
+        $b->connect_simple('clicked', array($this, 'notify'), 'تست', 'تست');
+        $this->_table->attach($b, 3, 4, 0, 1);
+        
+        // left of year
+        $i = GtkImage::new_from_stock(Gtk::STOCK_GO_BACK, Gtk::ICON_SIZE_MENU);
+        $b = new GtkButton('');
+        $b->set_can_focus(false);
+        $b->set_image($i);
+        $b->connect_simple('clicked', array($this, 'notify'), 'تست', 'تست');
+        $this->_table->attach($b, 10, 11, 0, 1);
+
+        // right of year
+        $i = GtkImage::new_from_stock(Gtk::STOCK_GO_FORWARD, Gtk::ICON_SIZE_MENU);
+        $b = new GtkButton('');
+        $b->set_can_focus(false);
+        $b->set_image($i);
+        $b->connect_simple('clicked', array($this, 'notify'), 'تست', 'تست');
+        $this->_table->attach($b, 13, 14, 0, 1);
+
+        // fill month label
+        $b = new GtkLabel('');
+        $b->set_use_markup(true);
+        $b->set_markup('آبان');
+        $this->_table->attach($b, 1, 3, 0, 1);
+
+        // fill year label
+        $b = new GtkLabel('');
+        $b->set_use_markup(true);
+        $b->set_markup('۱۳۸۹');
+        $this->_table->attach($b, 11, 13, 0, 1);
+        
         // fill week names
         for($d=0; $d<7; $d++){
             $b = new GtkLabel('');
             $b->set_use_markup(true);
             $b->set_markup($week_names[$d]);
-            $this->_table->attach($b, abs($d-6), abs($d-6)+1, 0, 1);
+            $this->_table->attach($b, abs($d-6)*2, abs($d-6)*2+2, 1, 2);
         }
         
         // fill days
         $days = array();
-        $y = 1;
+        $y = 2;
         $max_days = persian_calendar::date('t', persian_calendar::mktime(0, 0, 0, $month, 1, $year), false);
         
         for($d=1; $d<=$max_days; $d++){
@@ -142,7 +187,7 @@ class Calendar
             if($day == $d){
                 $b->set_active(true);
             }
-            $this->_table->attach($b, $days[$d]['x'], $days[$d]['x']+1, $days[$d]['y'], $days[$d]['y']+1);
+            $this->_table->attach($b, $days[$d]['x'] * 2, $days[$d]['x']*2+2, $days[$d]['y'], $days[$d]['y']+1);
             
             // change Y after friday!
             if($weekday == 7) $y++;
@@ -177,8 +222,6 @@ class Calendar
 
     private function createLeftMenu()
     {
-        if(isset($this->_leftmenu)) $this->_leftmenu->destroy();
-        
         $this->_leftmenu = new GtkWindow();
         $this->_leftmenu->set_position(Gtk::WIN_POS_MOUSE);
         $this->_leftmenu->set_decorated(false);
@@ -210,6 +253,7 @@ class Calendar
     {
         if($this->_leftmenu_visible){
             $this->_leftmenu->hide_all();
+            if(isset($this->_leftmenu)) $this->_leftmenu->destroy();
             $this->_leftmenu_visible = false;
         } else {
             $this->createLeftMenu();
