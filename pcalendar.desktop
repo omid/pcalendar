@@ -2,7 +2,7 @@
 Encoding=UTF-8
 Name=Persian Calendar
 Comment=Another calendar for Persians
-Exec=pcalendar.php
+Exec=pcalendar
 Icon=/usr/share/pcalendar/cal.png
 Terminal=false
 Type=Application

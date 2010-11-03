@@ -2,21 +2,17 @@ This work was packaged for Debian by:
 
     omidmottaghi <omidmr@gmail.com> on Tue, 13 Jul 2010 21:57:02 +0430
 
-It was downloaded from <url://example.com>
-
 Upstream Author(s):
 
-    <put author's name and email here>
-    <likewise for another author>
+    omidmottaghi <omidmr@gmail.com>
 
 Copyright:
 
-    <Copyright (C) YYYY Name OfAuthor>
-    <likewise for another author>
+    <Copyright (C) 2010 Omid Mottaghi>
 
 License:
 
-    <Put the license of the package here indented by 4 spaces>
+    GPLv3
 
 The Debian packaging is:
 

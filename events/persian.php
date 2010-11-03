@@ -1,6 +1,6 @@
 <?php
 
-$s_events = array (
+$p_events = array (
 
     array('day' => 1, 'title' => '', 'holiday' => false),
 
