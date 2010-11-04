@@ -89,63 +89,83 @@ class Calendar
 
     private function renderCalendar($year, $month, $day)
     {
-        $ts = persian_calendar::mktime(0, 0, 0, $month, $day, $year);
+        $max_days = persian_calendar::date('t', persian_calendar::mktime(0, 0, 0, $month, 1, $year), false);
+
+        // check if this month have desired day
+        if($max_days < $this->day) $this->day = $day = $max_days;
         
+        $ts = persian_calendar::mktime(0, 0, 0, $month, $day, $year);
+
+        $this->_leftmenu->resize(1,1);
         if($this->_leftmenu->get_child()){
             $this->_leftmenu->get_child()->destroy();
         }
-        $this->_vbox = new GtkVBox(false, 10);
-        $this->_leftmenu->add($this->_vbox);
-        
-        $l = new GtkLabel('', true);
-        $l->set_use_markup(true);
-        $l->set_justify(Gtk::JUSTIFY_CENTER);
-        $l->set_padding(5, 5);
-        $this->_leftmenu->get_child()->pack_start($l, true, true, 0);
-        $str = '<b>' . persian_calendar::date('Y/m/d', $ts) . '</b>       <b>' . date('Y/m/d', $ts) . '</b>';
-        $l->set_markup($str);
+        $this->_leftmenu->add(new GtkVBox(false, 2));
         
         $this->_table = new GtkTable(1, 1, true);
-        $this->_table->set_col_spacings(0);
-        $this->_table->set_row_spacings(0);
+        $this->_table->set_col_spacings(2);
+        $this->_table->set_row_spacings(2);
         $this->_leftmenu->get_child()->pack_start($this->_table, true, true, 5);
         
-        $week_names = array('شنبه', 'یک‌شنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه');
-        $month_names = array('فروردین', 'اردیبهشت', 'خرداد', 'تیر',  'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند');
+        $week_names = array('شنبه', 'یک', 'دو', 'سه', 'چهار', 'پنج', 'جمعه');
         
-        // fill changing months and years panel
-        // month
-        $this->_m = GtkComboBox::new_text();
-        foreach($month_names as $m) $this->_m->append_text($m);
-        $this->_m->set_active($month-1);
-        $this->_m->connect_simple('changed', array($this, 'dateChangedInCalendar'));
-        $this->_table->attach($this->_m, 0, 2, 0, 1, Gtk::FILL, Gtk::FILL, 0, 0);
+        // month panel
+        $hbox = new GtkHBox();
+        $this->_table->attach($hbox, 0, 3, 0, 1, Gtk::FILL, Gtk::FILL, 0, 0);
         
-        // year
-        $this->_y = GtkSpinButton::new_with_range(1000, 2000, 1);
-        $this->_y->set_value($year);
-        $this->_y->connect_simple('value-changed', array($this, 'dateChangedInCalendar'));
-        $this->_table->attach($this->_y, 5, 7, 0, 1, Gtk::FILL, Gtk::FILL, 0, 0);
+        $l = new GtkButton();
+        $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
+        $l->set_relief(Gtk::RELIEF_NONE);
+        $hbox->pack_start($l, false, false);
+        $l->connect('clicked', array($this, 'monthChangedInCalendar'), 1);
+        
+        $l = new GtkLabel(persian_calendar::date('F', $ts));
+        $hbox->pack_start($l);
+
+        $l = new GtkButton();
+        $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-next.svg'));
+        $l->set_relief(Gtk::RELIEF_NONE);
+        $hbox->pack_start($l, false, false);
+        $l->connect('clicked', array($this, 'monthChangedInCalendar'), -1);
+        
+        // year panel
+        $hbox = new GtkHBox();
+        $this->_table->attach($hbox, 4, 7, 0, 1, Gtk::FILL, Gtk::FILL, 0, 0);
+        
+        $l = new GtkButton();
+        $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
+        $l->set_relief(Gtk::RELIEF_NONE);
+        $hbox->pack_start($l, false, false);
+        $l->connect('clicked', array($this, 'yearChangedInCalendar'), 1);
+        
+        $l = new GtkLabel(persian_calendar::date('Y', $ts));
+        $hbox->pack_start($l);
+
+        $l = new GtkButton();
+        $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-next.svg'));
+        $l->set_relief(Gtk::RELIEF_NONE);
+        $hbox->pack_start($l, false, false);
+        $l->connect('clicked', array($this, 'yearChangedInCalendar'), -1);
         
         // fill week names
         for($d=0; $d<7; $d++){
             $b = new GtkLabel('');
             $b->set_use_markup(true);
             $b->set_markup($week_names[$d]);
-            $this->_table->attach($b, abs($d-6), abs($d-6)+1, 1, 2, Gtk::FILL, Gtk::FILL, 0, 0);
+            $this->_table->attach($b, abs($d-6), abs($d-6)+1, 1, 2, 0, 0, 0, 0);
         }
 
-        // fill event title
         $l = new GtkLabel('', true);
         $l->set_use_markup(true);
         $l->set_justify(Gtk::JUSTIFY_CENTER);
-        $this->_leftmenu->get_child()->pack_start($l, true, true, 0);
-        $l->modify_bg(Gtk::STATE_ACTIVE, GdkColor::parse('#FFCCCC')); // holiday
+        $l->set_padding(0,0);
+        $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
+        $str = persian_calendar::date('Y/m/d', $ts) . '               ' . date('Y/m/d', $ts);
+        $l->set_markup($str);
         
         // fill days
         $days = array();
         $y = 2;
-        $max_days = persian_calendar::date('t', persian_calendar::mktime(0, 0, 0, $month, 1, $year), false);
         
         for($d=1; $d<=$max_days; $d++){
             $weekday = persian_calendar::date('N', persian_calendar::mktime(0, 0, 0, $month, $d, $year), false);
@@ -155,34 +175,70 @@ class Calendar
             
             $b = new GtkToggleButton('');
             $b->set_can_focus(false);
-            
             if($days[$d]['holiday']){
                 $b->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#FFEEEE')); // holiday
-                $b->modify_bg(Gtk::STATE_ACTIVE, GdkColor::parse('#FFDDDD')); // holiday
+                $b->modify_bg(Gtk::STATE_ACTIVE, GdkColor::parse('#FFCCCC')); // holiday / selected
                 $b->modify_bg(Gtk::STATE_PRELIGHT, GdkColor::parse('#FFFEFE')); // holiday / hover
             } else {
                 $b->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#EEEEFF')); // normal day
-                $b->modify_bg(Gtk::STATE_ACTIVE, GdkColor::parse('#DDDDFF')); // normal day
+                $b->modify_bg(Gtk::STATE_ACTIVE, GdkColor::parse('#CCCCFF')); // normal day / selected
                 $b->modify_bg(Gtk::STATE_PRELIGHT, GdkColor::parse('#FEFEFF')); // normal day / hover
             }
 
-            $this->bs[$d] = $b->connect_simple('toggled', array($this, 'dayToggledInCalendar'), $b, $d);
+            $this->bs[$d] = $b->connect_simple('toggled', array($this, 'dayChangedInCalendar'), $b, $d);
             $b->get_child()->set_use_markup(true);
             $b->get_child()->set_markup(persian_calendar::persian_no($d) . '  <span color="darkgray"><small><small>'.date('j', persian_calendar::mktime(0,0,0,$month,$d,$year)).'</small></small></span>');
             if($day == $d){
                 $b->set_active(true);
-                if($today['title']) $l->set_markup($today['title']);
+                if($today['title']){
+                    // fill event title
+                    $l = new GtkLabel('', true);
+                    $l->set_use_markup(true);
+                    $l->set_justify(Gtk::JUSTIFY_CENTER);
+                    $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
+                    $l->modify_fg(Gtk::STATE_ACTIVE, GdkColor::parse('#FFCCCC')); // holiday
+                    $l->set_markup('<b>' . $today['title'] . '</b>');
+                }
             }
             $this->_table->attach($b, $days[$d]['x'], $days[$d]['x']+1, $days[$d]['y'], $days[$d]['y']+1, Gtk::FILL, Gtk::FILL, 0, 0);
             
             // change Y after friday!
             if($weekday == 7) $y++;
         }
-
+        
         $this->_leftmenu->show_all();
     }
+    
+    public function monthChangedInCalendar($obj, $val)
+    {
+        $month = $this->month;
+        $this->month += $val;
+        if($this->month<1){
+            $this->month=12;
+            $this->year--;
+        }
+        if($this->month>12){
+            $this->month=1;
+            $this->year++;
+        }
+        if($this->month != $month){
+            $this->dateChangedInCalendar();
+        }
+    }
 
-    public function dayToggledInCalendar($b, $day)
+    public function yearChangedInCalendar($obj, $val)
+    {
+        $max_year = 10000;
+        $year = $this->year;
+        $this->year += $val;
+        if($this->year<1) $this->year=1;
+        if($this->year>$max_year) $this->year=$max_year;
+        if($this->year != $year){
+            $this->dateChangedInCalendar();
+        }
+    }
+    
+    public function dayChangedInCalendar($b, $day)
     {
         $b->disconnect($this->bs[$day]);
         
@@ -201,8 +257,6 @@ class Calendar
     
     public function dateChangedInCalendar()
     {
-        $this->month = $this->_m->get_active() + 1;
-        $this->year = $this->_y->get_value();
         $this->renderCalendar($this->year, $this->month, $this->day);
     }
     
@@ -232,7 +286,7 @@ class Calendar
         $this->_leftmenu->set_decorated(false);
         $this->_leftmenu->set_skip_taskbar_hint(true);
         $this->_leftmenu->set_skip_pager_hint(true);
-        $this->_leftmenu->set_border_width(10);
+        $this->_leftmenu->set_border_width(5);
 
         $this->year = persian_calendar::date('Y', '', false);
         $this->month = persian_calendar::date('n', '', false);
