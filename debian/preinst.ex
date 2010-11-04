@@ -15,15 +15,9 @@ set -e
 
 
 case "$1" in
-    install|upgrade)
-    ;;
-
-    abort-upgrade)
-    ;;
-
-    *)
-        echo "preinst called with unknown argument \`$1'" >&2
-        exit 1
+    upgrade)
+        rm -rf /usr/share/pcalendar
+        rm -f /usr/bin/pcalendar*
     ;;
 esac
 

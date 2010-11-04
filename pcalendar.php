@@ -33,9 +33,9 @@ class Calendar
             $today = $this->getEvent(persian_calendar::date('Y', '', false), persian_calendar::date('m', '', false), persian_calendar::date('d', '', false));
             
             if($today['holiday']){
-                $im = imagecreatefrompng('/usr/share/pcalendar/icon-holiday.png');
+                $im = imagecreatefrompng('/usr/share/pcalendar/pix/icon-holiday.png');
             } else {
-                $im = imagecreatefrompng('/usr/share/pcalendar/icon.png');
+                $im = imagecreatefrompng('/usr/share/pcalendar/pix/icon.png');
             }
             $fg = imagecolorallocate($im, 230, 230, 230);
             $font = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf';
@@ -276,7 +276,7 @@ class Calendar
         
         $id = $n->Notify(
             'Persian Calendar', new DBusUInt32( 0 ), // app_name, replaces_id
-            '/usr/share/pcalendar/cal.png', $title, $body, // app_icon, summary, body
+            '/usr/share/pcalendar/pix/cal.png', $title, $body, // app_icon, summary, body
             new DBusArray( DBus::STRING, array() ), // actions
             new DBusDict(                           // hints
                 DBus::VARIANT,

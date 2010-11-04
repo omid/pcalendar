@@ -1,8 +1,5 @@
-pcalendar (0.1.0-1) maverick; urgency=low
+pcalendar (0.1.0-3) maverick; urgency=low
 
-  * day icon in notification (Thanks to Mostafa Mirmousavi)
-  * calendar in left click
-  * introducing persian events (nothing included yet!)
-  * a lot of bugs fixed
+  * some typoes fixed
 
  -- omidmottaghi <omidmr@gmail.com>  Tue, 13 Jul 2010 21:57:02 +0430
