@@ -41,6 +41,11 @@ class Calendar
             $font = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf';
             imagettftext($im, 11, 0, 5, 21, $fg, $font, persian_calendar::date('d'));
             $pixbuf = GdkPixbuf::new_from_gd($im);
+
+            imagealphablending($im, true);
+            imagesavealpha($im, true);
+            imagepng($im,'/tmp/today.png');
+
             imagedestroy($im);
 
             $this->_tray->set_tooltip(persian_calendar::date('j M Y'));
@@ -330,7 +335,7 @@ class Calendar
         
         $id = $n->Notify(
             'Persian Calendar', new DBusUInt32( 0 ), // app_name, replaces_id
-            '/usr/share/pcalendar/pix/cal.png', $title, $body, // app_icon, summary, body
+            '/tmp/today.png', $title, $body, // app_icon, summary, body
             new DBusArray( DBus::STRING, array() ), // actions
             new DBusDict(                           // hints
                 DBus::VARIANT,
