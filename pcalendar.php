@@ -277,9 +277,19 @@ class Calendar
     private function createRightMenu()
     {
         $this->_rightmenu = new GtkMenu();
+
+        $preferences = new GtkMenuItem('Preferences');
+        $about = new GtkMenuItem('About');
         $quit = new GtkMenuItem('Quit');
+        
+        $preferences->connect('activate', array($this, 'onPreferences'));
+        $about->connect('activate', array($this, 'onAbout'));
         $quit->connect('activate', array($this, 'onQuit'));
+        
+        $this->_rightmenu->append($preferences);
+        $this->_rightmenu->append($about);
         $this->_rightmenu->append($quit);
+
         $this->_rightmenu->show_all();
         GtkStatusIcon::position_menu($this->_rightmenu, $this->_tray);
     }
