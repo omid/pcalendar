@@ -286,6 +286,7 @@ class Calendar
         
         $this->_rightmenu->append($preferences);
         $this->_rightmenu->append($about);
+        $this->_rightmenu->append(new GtkSeparatorMenuItem());
         $this->_rightmenu->append($quit);
 
         $this->_rightmenu->show_all();
@@ -317,7 +318,15 @@ class Calendar
     {
         $this->__destruct();
     }
-
+    
+    public function onAbout()
+    {
+    }
+    
+    public function onPreferences()
+    {
+    }
+    
     public function onRightMenu()
     {
         $this->_rightmenu->popup();
