@@ -320,7 +320,29 @@ class Calendar
     }
     
     public function onAbout()
-    {
+    {	//man ina ro gozashtam ta khodet har jor mikhae taghir bedi :D //closesh ham kar nemikone :(
+		$dlgAbout = new GtkAboutDialog();
+		 
+		$dlgAbout->set_name('Persian Calendar');
+		$dlgAbout->set_version('0.0.6');
+		 
+		$dlgAbout->set_comments('These are my comments' . "\nWith a newline");
+		$dlgAbout->set_copyright('Copyright (C) 2010');
+		$dlgAbout->set_license("GPL.\n"
+			. "mahale gharargiri tozihat.");//Button
+		$dlgAbout->set_logo(
+			$dlgAbout->render_icon(Gtk::STOCK_CDROM, Gtk::ICON_SIZE_LARGE_TOOLBAR)
+		);
+		$dlgAbout->set_website('http://oxygenws.com'); // link
+		$dlgAbout->set_authors(array('Omid Mottaghi'));
+		//$dlgAbout->set_artists(array('Omid Mottaghi'));
+				//$dlgAbout->set_translator_credits("German version - My Friend\n"
+		//	. "French version - Another Friend");
+		
+        $dlgAbout->set_skip_taskbar_hint(true);
+        //$dlgAbout->set_skip_pager_hint(true); //nemidonam bara chiye, chon khodet gozashte bodi manam gozashtam :D
+		
+		$dlgAbout->run();
     }
     
     public function onPreferences()
