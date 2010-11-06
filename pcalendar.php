@@ -40,22 +40,19 @@ class Calendar
             $fg = imagecolorallocate($im, 230, 230, 230);
             $font = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf';
             imagettftext($im, 11, 0, 5, 21, $fg, $font, persian_calendar::date('d'));
-            $pixbuf = GdkPixbuf::new_from_gd($im);
-
             imagealphablending($im, true);
             imagesavealpha($im, true);
-            imagepng($im,'/tmp/today.png');
-
+            imagepng($im, '/tmp/today.png');
             imagedestroy($im);
-
-            $this->_tray->set_tooltip(persian_calendar::date('j M Y'));
             
-            $this->_tray->set_from_pixbuf($pixbuf);
+            $this->_tray->set_tooltip(persian_calendar::date('j M Y'));
+            $this->_tray->set_from_file('/tmp/today.png');
             
             $this->_date = date('Y/m/d');
             
             $this->notify(persian_calendar::date('l d F Y'), $today['title']);
-            
+
+            @unlink('/tmp/today.png');
         }
         return true;
     }
