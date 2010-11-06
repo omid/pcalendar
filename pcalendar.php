@@ -113,7 +113,7 @@ class Calendar
         
         // month panel
         $hbox = new GtkHBox();
-        $this->_table->attach($hbox, 0, 3, 0, 1, Gtk::FILL, Gtk::FILL, 0, 0);
+        $this->_table->attach($hbox, 0, 4, 0, 1, Gtk::FILL, Gtk::FILL, 0, 0);
         
         $l = new GtkButton();
         $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
@@ -129,6 +129,16 @@ class Calendar
         $l->set_relief(Gtk::RELIEF_NONE);
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'monthChangedInCalendar'), -1);
+        
+        //go today button
+        $GoToday = new GtkButton();
+        $GoToday->set_relief(Gtk::RELIEF_NONE);
+        $GoToday->set_label('امروز');
+        $GoToday->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#EEEEFF'));
+        $GoToday->modify_bg(Gtk::STATE_ACTIVE, GdkColor::parse('#CCCCFF'));
+        $GoToday->modify_bg(Gtk::STATE_PRELIGHT, GdkColor::parse('#FEFEFF'));
+        $GoToday->connect('clicked', array($this, 'dateChangedInCalendar'));// !!! not changed !!!
+        $hbox->pack_start($GoToday, false, false);
         
         // year panel
         $hbox = new GtkHBox();
