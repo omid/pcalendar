@@ -41,6 +41,11 @@ class Calendar
             $font = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf';
             imagettftext($im, 11, 0, 5, 21, $fg, $font, persian_calendar::date('d'));
             $pixbuf = GdkPixbuf::new_from_gd($im);
+
+            imagealphablending($im, true);
+            imagesavealpha($im, true);
+            imagepng($im,'/tmp/today.png');
+
             imagedestroy($im);
 
             $this->_tray->set_tooltip(persian_calendar::date('j M Y'));
@@ -273,9 +278,19 @@ class Calendar
     private function createRightMenu()
     {
         $this->_rightmenu = new GtkMenu();
+
+        $preferences = new GtkMenuItem('Preferences');
+        $about = new GtkMenuItem('About');
         $quit = new GtkMenuItem('Quit');
+        
+        $preferences->connect('activate', array($this, 'onPreferences'));
+        $about->connect('activate', array($this, 'onAbout'));
         $quit->connect('activate', array($this, 'onQuit'));
+        
+        $this->_rightmenu->append($preferences);
+        $this->_rightmenu->append($about);
         $this->_rightmenu->append($quit);
+
         $this->_rightmenu->show_all();
         GtkStatusIcon::position_menu($this->_rightmenu, $this->_tray);
     }
@@ -331,7 +346,7 @@ class Calendar
         
         $id = $n->Notify(
             'Persian Calendar', new DBusUInt32( 0 ), // app_name, replaces_id
-            '/usr/share/pcalendar/pix/cal.png', $title, $body, // app_icon, summary, body
+            '/tmp/today.png', $title, $body, // app_icon, summary, body
             new DBusArray( DBus::STRING, array() ), // actions
             new DBusDict(                           // hints
                 DBus::VARIANT,
