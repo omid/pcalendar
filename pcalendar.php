@@ -100,12 +100,12 @@ class Calendar
         if($this->_leftmenu->get_child()){
             $this->_leftmenu->get_child()->destroy();
         }
-        $this->_leftmenu->add(new GtkVBox(false, 2));
+        $this->_leftmenu->add(new GtkVBox());
         
         $this->_table = new GtkTable(1, 1, true);
         $this->_table->set_col_spacings(2);
         $this->_table->set_row_spacings(2);
-        $this->_leftmenu->get_child()->pack_start($this->_table, true, true, 5);
+        $this->_leftmenu->get_child()->pack_start($this->_table, true, true, 0);
         
         $week_names = array('شنبه', 'یک', 'دو', 'سه', 'چهار', 'پنج', 'جمعه');
         
@@ -155,10 +155,11 @@ class Calendar
             $this->_table->attach($b, abs($d-6), abs($d-6)+1, 1, 2, 0, 0, 0, 0);
         }
 
-        $l = new GtkLabel('', true);
+        // print persian and gregorian dates
+        $l = new GtkLabel();
         $l->set_use_markup(true);
         $l->set_justify(Gtk::JUSTIFY_CENTER);
-        $l->set_padding(0,0);
+        $l->set_padding(0,5);
         $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
         $str = persian_calendar::date('Y/m/d', $ts) . '               ' . date('Y/m/d', $ts);
         $l->set_markup($str);
@@ -184,10 +185,10 @@ class Calendar
                 $b->modify_bg(Gtk::STATE_ACTIVE, GdkColor::parse('#CCCCFF')); // normal day / selected
                 $b->modify_bg(Gtk::STATE_PRELIGHT, GdkColor::parse('#FEFEFF')); // normal day / hover
             }
-
+            
             $this->bs[$d] = $b->connect_simple('toggled', array($this, 'dayChangedInCalendar'), $b, $d);
             $b->get_child()->set_use_markup(true);
-            $b->get_child()->set_markup(persian_calendar::persian_no($d) . '  <span color="darkgray"><small><small>'.date('j', persian_calendar::mktime(0,0,0,$month,$d,$year)).'</small></small></span>');
+            $b->get_child()->set_markup(persian_calendar::persian_no($d) . ' <span color="darkgray"><small><small>'.date('j', persian_calendar::mktime(0,0,0,$month,$d,$year)).'</small></small></span>');
             if($day == $d){
                 $b->set_active(true);
                 if($today['title']){
