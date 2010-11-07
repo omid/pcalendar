@@ -3,7 +3,7 @@
 
 ini_set('php-gtk.codepage', 'UTF-8');
 
-require_once('/usr/share/pcalendar/persian_calendar.php');
+require_once('./persian_calendar.php');
 
 class Calendar
 {
@@ -33,9 +33,9 @@ class Calendar
             $today = $this->getEvent(persian_calendar::date('Y', '', false), persian_calendar::date('m', '', false), persian_calendar::date('d', '', false));
             
             if($today['holiday']){
-                $icon = '/usr/share/pcalendar/pix/holiday.svg';
+                $icon = './pix/holiday.svg';
             } else {
-                $icon = '/usr/share/pcalendar/pix/normalday.svg';
+                $icon = './pix/normalday.svg';
             }
             $icon = file_get_contents($icon);
             $icon = str_replace('۱۰', persian_calendar::date('d'), $icon);
@@ -55,8 +55,8 @@ class Calendar
 
     private function getEvent($year, $month, $day)
     {
-        foreach(glob('/usr/share/pcalendar/events/*.php') as $e){
-            require($e );
+        foreach(glob('./events/*.php') as $e){
+            require($e);
         }
         
         $ts = persian_calendar::mktime(0, 0, 0, $month, $day, $year);
@@ -112,7 +112,7 @@ class Calendar
         $this->_table->attach($hbox, 0, 4, 0, 1, Gtk::FILL, Gtk::FILL, 0, 0);
         
         $l = new GtkButton();
-        $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
+        $l->set_image(GtkImage::new_from_file('./pix/go-previous.svg'));
         $l->set_relief(Gtk::RELIEF_NONE);
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'monthChangedInCalendar'), 1);
@@ -121,7 +121,7 @@ class Calendar
         $hbox->pack_start($l);
 
         $l = new GtkButton();
-        $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-next.svg'));
+        $l->set_image(GtkImage::new_from_file('./pix/go-next.svg'));
         $l->set_relief(Gtk::RELIEF_NONE);
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'monthChangedInCalendar'), -1);
@@ -137,7 +137,7 @@ class Calendar
         $this->_table->attach($hbox, 4, 7, 0, 1, Gtk::FILL, Gtk::FILL, 0, 0);
         
         $l = new GtkButton();
-        $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
+        $l->set_image(GtkImage::new_from_file('./pix/go-previous.svg'));
         $l->set_relief(Gtk::RELIEF_NONE);
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'yearChangedInCalendar'), 1);
@@ -146,7 +146,7 @@ class Calendar
         $hbox->pack_start($l);
 
         $l = new GtkButton();
-        $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-next.svg'));
+        $l->set_image(GtkImage::new_from_file('./pix/go-next.svg'));
         $l->set_relief(Gtk::RELIEF_NONE);
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'yearChangedInCalendar'), -1);
@@ -338,7 +338,7 @@ class Calendar
          
         $dlgAbout->set_comments('Persian Calendar is a calendar for Persians.');
         $dlgAbout->set_copyright('GPL version 3');
-        $logo = GdkPixbuf::new_from_file('/usr/share/pcalendar/pix/icon.svg');
+        $logo = GdkPixbuf::new_from_file('./pix/icon.svg');
         $logo = $logo->scale_simple(32, 32, Gdk::INTERP_HYPER);
         $dlgAbout->set_logo($logo);
         $dlgAbout->set_website('https://github.com/omid/pcalendar'); // link
