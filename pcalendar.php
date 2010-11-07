@@ -33,35 +33,31 @@ class Calendar
             $today = $this->getEvent(persian_calendar::date('Y', '', false), persian_calendar::date('m', '', false), persian_calendar::date('d', '', false));
             
             if($today['holiday']){
-                $im = imagecreatefrompng('/usr/share/pcalendar/pix/icon-holiday.png');
+                $icon = '/usr/share/pcalendar/pix/holiday.svg';
             } else {
-                $im = imagecreatefrompng('/usr/share/pcalendar/pix/icon.png');
+                $icon = '/usr/share/pcalendar/pix/normalday.svg';
             }
-            $fg = imagecolorallocate($im, 230, 230, 230);
-            $font = '/usr/share/fonts/truetype/ttf-dejavu/DejaVuSans-Bold.ttf';
-            imagettftext($im, 11, 0, 5, 21, $fg, $font, persian_calendar::date('d'));
-            imagealphablending($im, true);
-            imagesavealpha($im, true);
-            imagepng($im, '/tmp/today.png');
-            imagedestroy($im);
+            $icon = file_get_contents($icon);
+            $icon = str_replace('۱۰', persian_calendar::date('d'), $icon);
+            $icon = file_put_contents('/tmp/today.svg', $icon);
             
             $this->_tray->set_tooltip(persian_calendar::date('j M Y'));
-            $this->_tray->set_from_file('/tmp/today.png');
+            $this->_tray->set_from_file('/tmp/today.svg');
             
             $this->_date = date('Y/m/d');
             
             $this->notify(persian_calendar::date('l d F Y'), $today['title']);
 
-            @unlink('/tmp/today.png');
+            @unlink('/tmp/today.svg');
         }
         return true;
     }
 
     private function getEvent($year, $month, $day)
     {
-        require('/usr/share/pcalendar/events/solar.php');
-        require('/usr/share/pcalendar/events/lunar.php');
-        require('/usr/share/pcalendar/events/persian.php');
+        foreach(glob('/usr/share/pcalendar/events/*.php') as $e){
+            require($e);
+        }
         
         $ts = persian_calendar::mktime(0, 0, 0, $month, $day, $year);
         
@@ -342,7 +338,9 @@ class Calendar
          
         $dlgAbout->set_comments('Persian Calendar is a calendar for Persians.');
         $dlgAbout->set_copyright('GPL version 3');
-        $dlgAbout->set_logo(GdkPixbuf::new_from_file('/usr/share/pcalendar/pix/cal.png'));
+        $logo = GdkPixbuf::new_from_file('/usr/share/pcalendar/pix/normalday.svg');
+        $logo = $logo->scale_simple(32, 32, Gdk::INTERP_HYPER);
+        $dlgAbout->set_logo($logo);
         $dlgAbout->set_website('https://github.com/omid/pcalendar'); // link
         $dlgAbout->set_authors(array("Omid Mottaghi\nMostafa Mirmousavi\nAnd maybe you, call us through the website!"));
         $dlgAbout->set_skip_taskbar_hint(true);
@@ -381,7 +379,7 @@ class Calendar
         
         $id = $n->Notify(
             'Persian Calendar', new DBusUInt32( 0 ), // app_name, replaces_id
-            '/tmp/today.png', $title, $body, // app_icon, summary, body
+            '/tmp/today.svg', $title, $body, // app_icon, summary, body
             new DBusArray( DBus::STRING, array() ), // actions
             new DBusDict(                           // hints
                 DBus::VARIANT,
