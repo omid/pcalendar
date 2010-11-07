@@ -22,7 +22,7 @@ class Calendar
         $this->createRightMenu();
         $this->onDayChange();
         
-        Gtk::timeout_add(600000 /* ten minutes */, array($this, 'onDayChange'));
+        Gtk::timeout_add(300000 /* five minutes */, array($this, 'onDayChange'));
         
         Gtk::main();
     }
@@ -56,7 +56,7 @@ class Calendar
     private function getEvent($year, $month, $day)
     {
         foreach(glob('/usr/share/pcalendar/events/*.php') as $e){
-            require($e);
+            require($e );
         }
         
         $ts = persian_calendar::mktime(0, 0, 0, $month, $day, $year);
@@ -338,7 +338,7 @@ class Calendar
          
         $dlgAbout->set_comments('Persian Calendar is a calendar for Persians.');
         $dlgAbout->set_copyright('GPL version 3');
-        $logo = GdkPixbuf::new_from_file('/usr/share/pcalendar/pix/normalday.svg');
+        $logo = GdkPixbuf::new_from_file('/usr/share/pcalendar/pix/icon.svg');
         $logo = $logo->scale_simple(32, 32, Gdk::INTERP_HYPER);
         $dlgAbout->set_logo($logo);
         $dlgAbout->set_website('https://github.com/omid/pcalendar'); // link
