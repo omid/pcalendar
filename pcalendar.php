@@ -130,14 +130,10 @@ class Calendar
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'monthChangedInCalendar'), -1);
         
-        //go today button
-        $GoToday = new GtkButton();
+        // go today button
+        $GoToday = new GtkButton('امروز');
         $GoToday->set_relief(Gtk::RELIEF_NONE);
-        $GoToday->set_label('امروز');
-        $GoToday->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#EEEEFF'));
-        $GoToday->modify_bg(Gtk::STATE_ACTIVE, GdkColor::parse('#CCCCFF'));
-        $GoToday->modify_bg(Gtk::STATE_PRELIGHT, GdkColor::parse('#FEFEFF'));
-        $GoToday->connect('clicked', array($this, 'dateChangedInCalendar'));// !!! not changed !!!
+        $GoToday->connect('clicked', array($this, 'goTodayInCalendar'));
         $hbox->pack_start($GoToday, false, false);
         
         // year panel
@@ -220,6 +216,14 @@ class Calendar
         }
         
         $this->_leftmenu->show_all();
+    }
+
+    public function goTodayInCalendar()
+    {
+        $this->year = persian_calendar::date('Y', '', false);
+        $this->month = persian_calendar::date('n', '', false);
+        $this->day = persian_calendar::date('j', '', false);
+        $this->dateChangedInCalendar();
     }
     
     public function monthChangedInCalendar($obj, $val)
@@ -315,7 +319,7 @@ class Calendar
         $this->year = persian_calendar::date('Y', '', false);
         $this->month = persian_calendar::date('n', '', false);
         $this->day = persian_calendar::date('j', '', false);
-        $this->renderCalendar($this->year, $this->month, $this->day);
+        $this->dateChangedInCalendar();
     }
 
     function __destruct()
@@ -330,29 +334,22 @@ class Calendar
     }
     
     public function onAbout()
-    {	//man ina ro gozashtam ta khodet har jor mikhae taghir bedi :D //closesh ham kar nemikone :(
-		$dlgAbout = new GtkAboutDialog();
-		 
-		$dlgAbout->set_name('Persian Calendar');
-		$dlgAbout->set_version('0.0.6');
-		 
-		$dlgAbout->set_comments('These are my comments' . "\nWith a newline");
-		$dlgAbout->set_copyright('Copyright (C) 2010');
-		$dlgAbout->set_license("GPL.\n"
-			. "mahale gharargiri tozihat.");//Button
-		$dlgAbout->set_logo(
-			$dlgAbout->render_icon(Gtk::STOCK_CDROM, Gtk::ICON_SIZE_LARGE_TOOLBAR)
-		);
-		$dlgAbout->set_website('http://oxygenws.com'); // link
-		$dlgAbout->set_authors(array('Omid Mottaghi'));
-		//$dlgAbout->set_artists(array('Omid Mottaghi'));
-				//$dlgAbout->set_translator_credits("German version - My Friend\n"
-		//	. "French version - Another Friend");
-		
+    {   
+        $dlgAbout = new GtkAboutDialog();
+         
+        $dlgAbout->set_name('Persian Calendar');
+        $dlgAbout->set_version('0.3');
+         
+        $dlgAbout->set_comments('Persian Calendar is a calendar for Persians.');
+        $dlgAbout->set_copyright('GPL version 3');
+        $dlgAbout->set_logo(GdkPixbuf::new_from_file('/usr/share/pcalendar/pix/cal.png'));
+        $dlgAbout->set_website('https://github.com/omid/pcalendar'); // link
+        $dlgAbout->set_authors(array("Omid Mottaghi\nMostafa Mirmousavi\nAnd maybe you, call us through the website!"));
         $dlgAbout->set_skip_taskbar_hint(true);
-        //$dlgAbout->set_skip_pager_hint(true); //nemidonam bara chiye, chon khodet gozashte bodi manam gozashtam :D
-		
-		$dlgAbout->run();
+        $dlgAbout->set_skip_pager_hint(true);
+        
+        $dlgAbout->run();
+        $dlgAbout->destroy();
     }
     
     public function onPreferences()
