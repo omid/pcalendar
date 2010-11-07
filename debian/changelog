@@ -1,6 +1,6 @@
-pcalendar (0.2.1-1) maverick; urgency=low
+pcalendar (0.3.0-1) maverick; urgency=low
 
-  * icon of notify changed to that days icon (Thanks to Mostafa Mirmousavi)
-  * design of calendar changed and fixed!
+  * about page inits! (Thanks to Mostafa Mirmousavi)
+  * icons converted to SVG
 
  -- omidmottaghi <omidmr@gmail.com>  Tue, 13 Jul 2010 21:57:02 +0430
