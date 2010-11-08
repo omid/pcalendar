@@ -1,6 +1,5 @@
-pcalendar (0.3.0-1) maverick; urgency=low
+pcalendar (0.3.1-1) maverick; urgency=low
 
-  * about page inits! (Thanks to Mostafa Mirmousavi)
-  * icons converted to SVG
+  * a bug generated in 0.3.0 removed!
 
  -- omidmottaghi <omidmr@gmail.com>  Tue, 13 Jul 2010 21:57:02 +0430
