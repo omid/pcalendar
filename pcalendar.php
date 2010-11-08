@@ -344,7 +344,7 @@ class Calendar
         $logo = $logo->scale_simple(32, 32, Gdk::INTERP_HYPER);
         $dlgAbout->set_logo($logo);
         $dlgAbout->set_website('https://github.com/omid/pcalendar'); // link
-        $dlgAbout->set_authors(array("Omid Mottaghi\nMostafa Mirmousavi\nAnd maybe you, call us through the website!"));
+        $dlgAbout->set_authors(array("Omid Mottaghi <omidmr@gmail.com>\nMostafa Mirmousavi <mirmousavi.m@gmail.com>\nAnd maybe you, call us through the website!"));
         $dlgAbout->set_skip_taskbar_hint(true);
         $dlgAbout->set_skip_pager_hint(true);
         
