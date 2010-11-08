@@ -312,6 +312,7 @@ class Calendar
         $this->_leftmenu->set_skip_pager_hint(true);
         $this->_leftmenu->set_border_width(5);
 		$this->_leftmenu->set_keep_above(true);
+		$this->_leftmenu->stick();
 		
         $this->year = persian_calendar::date('Y', '', false);
         $this->month = persian_calendar::date('n', '', false);
