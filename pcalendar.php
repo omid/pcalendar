@@ -99,17 +99,15 @@ class Calendar
             $this->_leftmenu->get_child()->destroy();
         }
         $this->_leftmenu->add(new GtkVBox());
-        
-        $this->_table = new GtkTable(1, 1, true);
-        $this->_table->set_col_spacings(2);
-        $this->_table->set_row_spacings(2);
-        $this->_leftmenu->get_child()->pack_start($this->_table, true, true, 0);
-        
+        $this->_leftmenu->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#FFFFFF'));
         $week_names = array('شنبه', 'یک', 'دو', 'سه', 'چهار', 'پنج', 'جمعه');
         
         // month panel
+        $mainhbox = new GtkHBox();
+        $this->_leftmenu->get_child()->pack_start($mainhbox, true, true, 0);
+
         $hbox = new GtkHBox();
-        $this->_table->attach($hbox, 0, 4, 0, 1, Gtk::FILL, Gtk::FILL, 0, 0);
+        $mainhbox->pack_start($hbox, true,true, 0);
         
         $l = new GtkButton();
         $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
@@ -118,6 +116,7 @@ class Calendar
         $l->connect('clicked', array($this, 'monthChangedInCalendar'), 1);
         
         $l = new GtkLabel(persian_calendar::date('F', $ts));
+        $l->set_size_request(50,25);
         $hbox->pack_start($l);
 
         $l = new GtkButton();
@@ -134,7 +133,7 @@ class Calendar
         
         // year panel
         $hbox = new GtkHBox();
-        $this->_table->attach($hbox, 4, 7, 0, 1, Gtk::FILL, Gtk::FILL, 0, 0);
+        $mainhbox->pack_start($hbox, true,true, 0);
         
         $l = new GtkButton();
         $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
@@ -151,26 +150,29 @@ class Calendar
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'yearChangedInCalendar'), -1);
         
+        $this->_table = new GtkTable(1, 1, true);
+        $this->_table->set_col_spacings(2);
+        $this->_table->set_row_spacings(2);
+        $this->_leftmenu->get_child()->pack_start($this->_table, true, true, 0);
+        
         // fill week names
         for($d=0; $d<7; $d++){
-            $b = new GtkLabel('');
+            $b = new GtkLabel();
             $b->set_use_markup(true);
             $b->set_markup($week_names[$d]);
-            $this->_table->attach($b, abs($d-6), abs($d-6)+1, 1, 2, 0, 0, 0, 0);
+            $this->_table->attach($b, abs($d-6), abs($d-6)+1, 0, 1, 0, 0, 0, 0);
         }
 
         // print persian and gregorian dates
         $l = new GtkLabel();
         $l->set_use_markup(true);
-        $l->set_justify(Gtk::JUSTIFY_CENTER);
         $l->set_padding(0,5);
         $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
-        $str = persian_calendar::date('Y/m/d', $ts) . '               ' . date('Y/m/d', $ts);
-        $l->set_markup($str);
+        $l->set_markup(persian_calendar::date('Y/m/d', $ts) . '               ' . date('Y/m/d', $ts));
         
         // fill days
         $days = array();
-        $y = 2;
+        $y = 1;
         
         for($d=1; $d<=$max_days; $d++){
             $weekday = persian_calendar::date('N', persian_calendar::mktime(0, 0, 0, $month, $d, $year), false);
@@ -178,34 +180,33 @@ class Calendar
             $today = $this->getEvent($year, $month, $d);
             $days[$d] = array_merge($days[$d], $today);
             
-            $b = new GtkToggleButton('');
-            $b->set_can_focus(false);
+            $labelEvent  = new GtkEventBox();
+            $labelEvent->add(new GtkLabel());
+            $labelEvent->get_child()->set_use_markup(true);
+            $this->bs[$d] = $labelEvent->connect('button_press_event', array($this, 'dayChangedInCalendar'), $d);
+            //$labelEvent->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#ffffff'));
+
             if($days[$d]['holiday']){
-                $b->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#FFEEEE')); // holiday
-                $b->modify_bg(Gtk::STATE_ACTIVE, GdkColor::parse('#FFCCCC')); // holiday / selected
-                $b->modify_bg(Gtk::STATE_PRELIGHT, GdkColor::parse('#FFFEFE')); // holiday / hover
+                $color = 'red';
+                $selected_color = '#ff9999';
             } else {
-                $b->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#EEEEFF')); // normal day
-                $b->modify_bg(Gtk::STATE_ACTIVE, GdkColor::parse('#CCCCFF')); // normal day / selected
-                $b->modify_bg(Gtk::STATE_PRELIGHT, GdkColor::parse('#FEFEFF')); // normal day / hover
+                $color = 'black';
+                $selected_color = '#ffffff';
             }
             
-            $this->bs[$d] = $b->connect_simple('toggled', array($this, 'dayChangedInCalendar'), $b, $d);
-            $b->get_child()->set_use_markup(true);
-            $b->get_child()->set_markup(persian_calendar::persian_no($d) . ' <span color="darkgray"><small><small>'.date('j', persian_calendar::mktime(0,0,0,$month,$d,$year)).'</small></small></span>');
             if($day == $d){
-                $b->set_active(true);
+                $labelEvent->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#555555')); // holiday / selected
                 if($today['title']){
                     // fill event title
-                    $l = new GtkLabel('', true);
+                    $l = new GtkLabel();
                     $l->set_use_markup(true);
-                    $l->set_justify(Gtk::JUSTIFY_CENTER);
                     $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
-                    $l->modify_fg(Gtk::STATE_ACTIVE, GdkColor::parse('#FFCCCC')); // holiday
-                    $l->set_markup('<b>' . $today['title'] . '</b>');
+                    $l->set_markup("<span color=\"{$color}\">" . $today['title'] . '</span>');
                 }
+                $color = $selected_color;
             }
-            $this->_table->attach($b, $days[$d]['x'], $days[$d]['x']+1, $days[$d]['y'], $days[$d]['y']+1, Gtk::FILL, Gtk::FILL, 0, 0);
+            $labelEvent->get_child()->set_markup("<big><span color=\"{$color}\">".persian_calendar::persian_no($d) . '</span></big> <span color="darkgray"><small><small>'.date('j', persian_calendar::mktime(0,0,0,$month,$d,$year)).'</small></small></span>');
+            $this->_table->attach($labelEvent, $days[$d]['x'], $days[$d]['x']+1, $days[$d]['y'], $days[$d]['y']+1, Gtk::EXPAND|Gtk::FILL, Gtk::EXPAND|Gtk::FILL, 0, 0);
             
             // change Y after friday!
             if($weekday == 7) $y++;
@@ -251,17 +252,10 @@ class Calendar
         }
     }
     
-    public function dayChangedInCalendar($b, $day)
+    public function dayChangedInCalendar($widget, $event, $day)
     {
-        $b->disconnect($this->bs[$day]);
+        //$widget->disconnect($this->bs[$day]);
         
-        $days = $this->_table->get_children();
-        foreach($days as $d){
-            if(get_class($d) == 'GtkToggleButton'){
-                $d->set_active(false);
-            }
-        }
-        $b->set_active(true);
         if($this->day != $day){
             $this->day = $day;
             $this->dateChangedInCalendar();
