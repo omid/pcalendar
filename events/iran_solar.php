@@ -1,6 +1,11 @@
 <?php
 
-$s_events = array (
+$events_info[] = array(
+    'name' => 'وقایع ایرانی',
+    'id'   => 'iran_solar'
+);
+
+$events[] = array (
 
     array('day' => 1, 'title' => 'عید نوروز', 'holiday' => true),
     array('day' => 2, 'title' => 'عید نوروز', 'holiday' => true),

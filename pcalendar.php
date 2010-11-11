@@ -65,17 +65,14 @@ class Calendar
         $today['day'] = persian_calendar::date('z', $ts, false);
         $today['title'] = '';
         $today['holiday'] = false;
-        foreach($l_events as $e){
-            if($e['day'] == $today['day']){
-                $today = $e;
-            }
-        }
         
-        foreach($s_events as $e){
-            if($e['day'] == $today['day']){
-                $today['holiday'] = $today['holiday'] || $e['holiday'];
-                if($today['title']) $today['title'] .= "\n";
-                $today['title'] .= $e['title'];
+        foreach($events as $event){
+            foreach($event as $e){
+                if($e['day'] == $today['day']){
+                    $today['holiday'] = $today['holiday'] || $e['holiday'];
+                    if($today['title']) $today['title'] .= "\n";
+                    $today['title'] .= $e['title'];
+                }
             }
         }
         
@@ -205,8 +202,10 @@ class Calendar
                     // fill event title
                     $l = new GtkLabel();
                     $l->set_use_markup(true);
-                    $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
+                    $l->set_line_wrap(true);
+                    $l->set_width_chars(33);
                     $l->set_markup("<span color=\"{$color}\">" . $today['title'] . '</span>');
+                    $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
                 }
                 $color = $selected_color;
             }

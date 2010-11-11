@@ -1,6 +1,11 @@
 <?php
 
-$p_events = array (
+$events_info[] = array(
+    'name' => 'وقایع پارسی',
+    'id'   => 'persian'
+);
+
+$events[] = array (
     
     // farvardin
     array('day' => 1, 'title' => 'اورمزد روز، روز جشن بزرگ نوروز', 'holiday' => false),

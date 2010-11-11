@@ -1,5 +1,10 @@
 <?php
 
+$events_info[] = array(
+    'name' => 'وقایع عربی و رسمی ایران',
+    'id'   => 'iran_lunar'
+);
+
 $l_events = array (
 
     array('day' => 58, 'title' => 'شهادت حضرت فاطمه', 'holiday' => true),
@@ -33,6 +38,9 @@ foreach($l_events as $index => $e){
     $l_events[$index] = $e;
 }
 
+$events[] = $l_events;
+
+unset($l_events);
 unset($leap);
 unset($delta);
 unset($index);
