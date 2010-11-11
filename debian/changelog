@@ -2,5 +2,6 @@ pcalendar (0.4.0-1) maverick; urgency=low
 
   * interface changed again!
   * email added to about dialog
+  * world events added
 
  -- omidmottaghi <omidmr@gmail.com>  Tue, 13 Jul 2010 21:57:02 +0430

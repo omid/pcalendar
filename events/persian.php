@@ -1,5 +1,6 @@
 <?php
 
+return;
 $events_info[] = array(
     'name' => 'وقایع پارسی',
     'id'   => 'persian'
