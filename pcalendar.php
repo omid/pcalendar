@@ -112,6 +112,7 @@ class Calendar
         $l = new GtkButton();
         $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
         $l->set_relief(Gtk::RELIEF_NONE);
+        $l->set_can_focus(false);
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'monthChangedInCalendar'), 1);
         
@@ -122,12 +123,14 @@ class Calendar
         $l = new GtkButton();
         $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-next.svg'));
         $l->set_relief(Gtk::RELIEF_NONE);
+        $l->set_can_focus(false);
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'monthChangedInCalendar'), -1);
         
         // go today button
         $GoToday = new GtkButton('امروز');
         $GoToday->set_relief(Gtk::RELIEF_NONE);
+        $GoToday->set_can_focus(false);
         $GoToday->connect('clicked', array($this, 'goTodayInCalendar'));
         $hbox->pack_start($GoToday, false, false);
         
@@ -138,6 +141,7 @@ class Calendar
         $l = new GtkButton();
         $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
         $l->set_relief(Gtk::RELIEF_NONE);
+        $l->set_can_focus(false);
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'yearChangedInCalendar'), 1);
         
@@ -147,6 +151,7 @@ class Calendar
         $l = new GtkButton();
         $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-next.svg'));
         $l->set_relief(Gtk::RELIEF_NONE);
+        $l->set_can_focus(false);
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'yearChangedInCalendar'), -1);
         
