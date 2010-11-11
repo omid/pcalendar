@@ -307,7 +307,7 @@ class Calendar
         $this->_leftmenu->set_border_width(5);
         $this->_leftmenu->set_keep_above(true);
         $this->_leftmenu->stick();
-		
+        
         $this->year = persian_calendar::date('Y', '', false);
         $this->month = persian_calendar::date('n', '', false);
         $this->day = persian_calendar::date('j', '', false);
@@ -330,14 +330,14 @@ class Calendar
         $dlgAbout = new GtkAboutDialog();
          
         $dlgAbout->set_name('Persian Calendar');
-        $dlgAbout->set_version('0.3');
+        $dlgAbout->set_version('0.4');
          
         $dlgAbout->set_comments('Persian Calendar is a calendar for Persians.');
         $dlgAbout->set_copyright('GPL version 3');
         $logo = GdkPixbuf::new_from_file('/usr/share/pcalendar/pix/icon.svg');
         $logo = $logo->scale_simple(32, 32, Gdk::INTERP_HYPER);
         $dlgAbout->set_logo($logo);
-        $dlgAbout->set_website('https://github.com/omid/pcalendar'); // link
+        $dlgAbout->set_website('https://github.com/omid/pcalendar');
         $dlgAbout->set_authors(array("Omid Mottaghi <omidmr@gmail.com>\nMostafa Mirmousavi <mirmousavi.m@gmail.com>\nAnd maybe you, call us through the website!"));
         $dlgAbout->set_skip_taskbar_hint(true);
         $dlgAbout->set_skip_pager_hint(true);
