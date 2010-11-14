@@ -353,7 +353,7 @@ class Calendar
     public function onPreferences()
     {
 		$dlgPreferences = new GtkDialog('Preferences Persian Calendar');
-        $dlgPreferences->set_icon_from_file('./pix/normalday.svg');
+        $dlgPreferences->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
         $dlgPreferences->set_default_size(300,50);
         $dlgPreferences->set_resizable(false);
         $dlgPreferences->set_modal(true);
