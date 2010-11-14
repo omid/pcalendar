@@ -382,7 +382,7 @@ class Calendar
 			if($checkboxStartLogin->get_active())
 			{
 				if(!file_exists("/home/mostafa/.config/autostart/pcalendar.desktop")) //can not find home DIR
-					copy('pcalendar.desktop', '/home/mostafa/.config/autostart/pcalendar.desktop'); 
+					copy('/usr/share/pcalendar/pcalendar.desktop', '/home/mostafa/.config/autostart/pcalendar.desktop'); 
 			}else
 			{
 				if(file_exists("/home/mostafa/.config/autostart/pcalendar.desktop")) //can not find home DIR
