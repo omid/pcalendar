@@ -96,7 +96,7 @@ class Calendar
             $this->_leftmenu->get_child()->destroy();
         }
         $this->_leftmenu->add(new GtkVBox());
-        $this->_leftmenu->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#FFFFFF'));
+        //$this->_leftmenu->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#FFFFFF'));
         $week_names = array('شنبه', 'یک', 'دو', 'سه', 'چهار', 'پنج', 'جمعه');
         
         // month panel
@@ -155,7 +155,13 @@ class Calendar
         $this->_table = new GtkTable(1, 1, true);
         $this->_table->set_col_spacings(2);
         $this->_table->set_row_spacings(2);
-        $this->_leftmenu->get_child()->pack_start($this->_table, true, true, 0);
+        
+        //midell frame
+		$frame = new GtkFrame();
+		//$frame->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#000000'));
+
+        $frame->add($this->_table);
+        $this->_leftmenu->get_child()->pack_start($frame, true, true, 0);
         
         // fill week names
         for($d=0; $d<7; $d++){
@@ -210,7 +216,11 @@ class Calendar
                 $color = $selected_color;
             }
             $labelEvent->get_child()->set_markup("<big><span color=\"{$color}\">".persian_calendar::persian_no($d) . '</span></big> <span color="darkgray"><small><small>'.date('j', persian_calendar::mktime(0,0,0,$month,$d,$year)).'</small></small></span>');
-            $this->_table->attach($labelEvent, $days[$d]['x'], $days[$d]['x']+1, $days[$d]['y'], $days[$d]['y']+1, Gtk::EXPAND|Gtk::FILL, Gtk::EXPAND|Gtk::FILL, 0, 0);
+            
+            $frameL = new GtkFrame();
+			$frameL->add($labelEvent);
+            
+            $this->_table->attach($frameL, $days[$d]['x'], $days[$d]['x']+1, $days[$d]['y'], $days[$d]['y']+1, Gtk::EXPAND|Gtk::FILL, Gtk::EXPAND|Gtk::FILL, 0, 0);
             
             // change Y after friday!
             if($weekday == 7) $y++;
