@@ -203,7 +203,7 @@ class Calendar
                     $l = new GtkLabel();
                     $l->set_use_markup(true);
                     $l->set_line_wrap(true);
-                    $l->set_width_chars(33);
+                    $l->set_width_chars(32);
                     $l->set_markup("<span color=\"{$color}\">" . $today['title'] . '</span>');
                     $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
                 }
