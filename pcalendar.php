@@ -332,7 +332,8 @@ class Calendar
     public function onAbout()
     {   
         $dlgAbout = new GtkAboutDialog();
-         
+        $dlgAbout->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
+        
         $dlgAbout->set_name('Persian Calendar');
         $dlgAbout->set_version('0.4');
          
@@ -343,7 +344,7 @@ class Calendar
         $dlgAbout->set_logo($logo);
         $dlgAbout->set_website('https://github.com/omid/pcalendar');
         $dlgAbout->set_authors(array("Omid Mottaghi <omidmr@gmail.com>\nMostafa Mirmousavi <mirmousavi.m@gmail.com>\nAnd maybe you, call us through the website!"));
-        $dlgAbout->set_skip_taskbar_hint(true);
+
         $dlgAbout->set_skip_pager_hint(true);
         
         $dlgAbout->run();
@@ -352,18 +353,17 @@ class Calendar
     
     public function onPreferences()
     {
-        $dlgPreferences = new GtkDialog('Preferences Persian Calendar');
+        $dlgPreferences = new GtkDialog('Persian Calendar Preferences');
         $dlgPreferences->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
         $dlgPreferences->set_default_size(300,50);
-        $dlgPreferences->set_resizable(false);
+        //$dlgPreferences->set_resizable(false);
         $dlgPreferences->set_modal(true);
         $dlgPreferences->set_skip_pager_hint(true);
         
-        //$dlgPreferences->vbox->pack_start(new GtkLabel("This is Preferences of Pcalendar:"));
-
         $exists = false;
         $checkboxStartLogin = new GtkCheckButton('Start at login.');
-        if(file_exists('~/.config/autostart/pcalendar.desktop')){
+        if(file_exists($_SERVER["HOME"] . '/.config/autostart/pcalendar.desktop')){
+            
             $checkboxStartLogin->set_active(true);
             $exists = true;
         }
@@ -372,7 +372,6 @@ class Calendar
         
         $dlgPreferences->add_buttons(array(
             Gtk::STOCK_CANCEL, Gtk::RESPONSE_CANCEL,
-            //Gtk::STOCK_APPLY, Gtk::RESPONSE_APPLY,
             Gtk::STOCK_OK, Gtk::RESPONSE_OK,
         )); 
         
@@ -382,40 +381,14 @@ class Calendar
 
         if($response_id == Gtk::RESPONSE_OK)
         {
-            if($checkboxStartLogin->get_active())
+            if($checkboxStartLogin->get_active() && !$exists)
             {
-                if(!$exists){
-                    copy('/usr/share/pcalendar/pcalendar.desktop', '~/.config/autostart/pcalendar.desktop');
-                }
+                copy('/usr/share/pcalendar/pcalendar.desktop', $_SERVER["HOME"] . '/.config/autostart/pcalendar.desktop');
             }else
             {
-                if($exists){
-                    unlink('~/.config/autostart/pcalendar.desktop');
-                }
-                
+                @unlink($_SERVER["HOME"] . '/.config/autostart/pcalendar.desktop');
             }
         }
-        
-        /*
-        switch($response_id) {
-            case Gtk::RESPONSE_CANCEL:
-                //
-                break;
-            case Gtk::RESPONSE_APPLY:
-                //
-                break;
-            case Gtk::RESPONSE_OK:
-                if($checkboxStartLogin->get_active())
-                {
-                    copy('pcalendar.desktop', '/home/mostafa/.config/autostart/pcalendar.desktop'); //error
-                }else
-                {
-                    unlink('/home/mostafa/.config/autostart/pcalendar.desktop'); //error
-                    
-                }
-                break;
-        }
-        */
     }
     
     public function onRightMenu()
