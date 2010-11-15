@@ -352,65 +352,70 @@ class Calendar
     
     public function onPreferences()
     {
-		$dlgPreferences = new GtkDialog('Preferences Persian Calendar');
+        $dlgPreferences = new GtkDialog('Preferences Persian Calendar');
         $dlgPreferences->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
         $dlgPreferences->set_default_size(300,50);
         $dlgPreferences->set_resizable(false);
         $dlgPreferences->set_modal(true);
         $dlgPreferences->set_skip_pager_hint(true);
         
-		//$dlgPreferences->vbox->pack_start(new GtkLabel("This is Preferences of Pcalendar:"));
+        //$dlgPreferences->vbox->pack_start(new GtkLabel("This is Preferences of Pcalendar:"));
 
-		$checkboxStartLogin = new GtkCheckButton("Start at login.");
-		if(file_exists("/home/mostafa/.config/autostart/pcalendar.desktop")) //can not find home DIR
-			$checkboxStartLogin->set_active(true); 
-		
-		$dlgPreferences->vbox->pack_start($checkboxStartLogin);
-		
-		$dlgPreferences->add_buttons(array(
-			Gtk::STOCK_CANCEL, Gtk::RESPONSE_CANCEL,
-			//Gtk::STOCK_APPLY, Gtk::RESPONSE_APPLY,
-			Gtk::STOCK_OK, Gtk::RESPONSE_OK,
-		)); 
-		
-		$dlgPreferences->show_all();
-		$response_id = $dlgPreferences->run();
-		$dlgPreferences->destroy();
+        $exists = false;
+        $checkboxStartLogin = new GtkCheckButton('Start at login.');
+        if(file_exists('~/.config/autostart/pcalendar.desktop')){
+            $checkboxStartLogin->set_active(true);
+            $exists = true;
+        }
+        
+        $dlgPreferences->vbox->pack_start($checkboxStartLogin);
+        
+        $dlgPreferences->add_buttons(array(
+            Gtk::STOCK_CANCEL, Gtk::RESPONSE_CANCEL,
+            //Gtk::STOCK_APPLY, Gtk::RESPONSE_APPLY,
+            Gtk::STOCK_OK, Gtk::RESPONSE_OK,
+        )); 
+        
+        $dlgPreferences->show_all();
+        $response_id = $dlgPreferences->run();
+        $dlgPreferences->destroy();
 
-		if($response_id == Gtk::RESPONSE_OK)
-		{
-			if($checkboxStartLogin->get_active())
-			{
-				if(!file_exists("/home/mostafa/.config/autostart/pcalendar.desktop")) //can not find home DIR
-					copy('/usr/share/pcalendar/pcalendar.desktop', '/home/mostafa/.config/autostart/pcalendar.desktop'); 
-			}else
-			{
-				if(file_exists("/home/mostafa/.config/autostart/pcalendar.desktop")) //can not find home DIR
-					unlink('/home/mostafa/.config/autostart/pcalendar.desktop');
-				
-			}
-		}
-		
-		/*
-		switch($response_id) {
-			case Gtk::RESPONSE_CANCEL:
-				//
-				break;
-			case Gtk::RESPONSE_APPLY:
-				//
-				break;
-			case Gtk::RESPONSE_OK:
-				if($checkboxStartLogin->get_active())
-				{
-					copy('pcalendar.desktop', '/home/mostafa/.config/autostart/pcalendar.desktop'); //error
-				}else
-				{
-					unlink('/home/mostafa/.config/autostart/pcalendar.desktop'); //error
-					
-				}
-				break;
-		}
-		*/
+        if($response_id == Gtk::RESPONSE_OK)
+        {
+            if($checkboxStartLogin->get_active())
+            {
+                if(!$exists){
+                    copy('/usr/share/pcalendar/pcalendar.desktop', '~/.config/autostart/pcalendar.desktop');
+                }
+            }else
+            {
+                if($exists){
+                    unlink('~/.config/autostart/pcalendar.desktop');
+                }
+                
+            }
+        }
+        
+        /*
+        switch($response_id) {
+            case Gtk::RESPONSE_CANCEL:
+                //
+                break;
+            case Gtk::RESPONSE_APPLY:
+                //
+                break;
+            case Gtk::RESPONSE_OK:
+                if($checkboxStartLogin->get_active())
+                {
+                    copy('pcalendar.desktop', '/home/mostafa/.config/autostart/pcalendar.desktop'); //error
+                }else
+                {
+                    unlink('/home/mostafa/.config/autostart/pcalendar.desktop'); //error
+                    
+                }
+                break;
+        }
+        */
     }
     
     public function onRightMenu()
