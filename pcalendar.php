@@ -404,7 +404,6 @@ class Calendar
         $vboxGeneral = new GtkVBox();
         $checkboxStartLogin = new GtkCheckButton('Start at login.');
         
-        $checkboxStartLogin = new GtkCheckButton('Start at login.');
         $exists = false;
         if(file_exists($startup_file)){
             $checkboxStartLogin->set_active(true);
@@ -418,20 +417,31 @@ class Calendar
         
         $vboxGeneral->pack_start($checkboxStartLogin);
         $this->add_new_tab($notebook, $vboxGeneral, 'General');
+        //End Page General
+        
+        //Start Window
         $dlgPreferences->show_all();
         $response_id = $dlgPreferences->run();
         $dlgPreferences->destroy();
-
+        //Stop Window
+        
+        //process of Preferences
         if($response_id == Gtk::RESPONSE_OK)
         {
-            if($checkboxStartLogin->get_active() && !$exists)
+            //process of General tab
+            if($checkboxStartLogin->get_active())
             {
-                copy('/usr/share/pcalendar/pcalendar.desktop', $startup_file);
+                if(!$exists)
+                {
+                    copy('/usr/share/pcalendar/pcalendar.desktop', $startup_file);
+                }
             }else
             {
                 @unlink($startup_file);
             }
+            //End process of General tab
         }
+        //End process of Preferences
     }
     
     //Add new tab
