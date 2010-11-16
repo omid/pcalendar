@@ -89,7 +89,7 @@ class Calendar
         // check if this month have desired day
         if($max_days < $this->day) $this->day = $day = $max_days;
         
-        $ts = persian_calendar::mktime(0, 0, 0, $month, $day, $year);
+        $ts = persian_calendar::mktime(1, 0, 0, $month, $day, $year);
 
         $this->_leftmenu->resize(1,1);
         if($this->_leftmenu->get_child()){
@@ -241,28 +241,51 @@ class Calendar
     public function monthChangedInCalendar($obj, $val)
     {
         $month = $this->month;
+        $year  = $this->year;
+
+        $type = '';
+        
         $this->month += $val;
         if($this->month<1){
-            $this->month=12;
             $this->year--;
+            if($this->checkYear()){
+                $this->month=12;
+            }
         }
         if($this->month>12){
-            $this->month=1;
             $this->year++;
+            if($this->checkYear()){
+                $this->month=1;
+            }
         }
+        
         if($this->month != $month){
             $this->dateChangedInCalendar();
         }
     }
 
+    public function checkYear()
+    {
+        $max_year = 1416; // limitation of 32bits operating systems!
+        $min_year = 1283; // limitation of 32bits operating systems!
+        
+        if($this->year<$min_year){
+            $this->year=$min_year;
+            return false;
+        }
+        if($this->year>$max_year){
+            $this->year=$max_year;
+            return false;
+        }
+        return true;
+    }
     public function yearChangedInCalendar($obj, $val)
     {
-        $max_year = 10000;
-        $max_year = 1416; // limitation of 32bits operating systems!
         $year = $this->year;
         $this->year += $val;
-        if($this->year<1) $this->year=1;
-        if($this->year>$max_year) $this->year=$max_year;
+
+        $this->checkYear();
+        
         if($this->year != $year){
             $this->dateChangedInCalendar();
         }
