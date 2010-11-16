@@ -397,21 +397,27 @@ class Calendar
         $dlgPreferences->set_modal(true);
         $dlgPreferences->set_skip_pager_hint(true);
         
-        $exists = false;
+        $notebook = new GtkNotebook();
+        $dlgPreferences->vbox->pack_start($notebook);
+        
+        //Page General
+        $vboxGeneral = new GtkVBox();
         $checkboxStartLogin = new GtkCheckButton('Start at login.');
+        
+        $checkboxStartLogin = new GtkCheckButton('Start at login.');
+        $exists = false;
         if(file_exists($startup_file)){
-            
             $checkboxStartLogin->set_active(true);
             $exists = true;
         }
-        
-        $dlgPreferences->vbox->pack_start($checkboxStartLogin);
         
         $dlgPreferences->add_buttons(array(
             Gtk::STOCK_CANCEL, Gtk::RESPONSE_CANCEL,
             Gtk::STOCK_OK, Gtk::RESPONSE_OK,
         )); 
         
+        $vboxGeneral->pack_start($checkboxStartLogin);
+        $this->add_new_tab($notebook, $vboxGeneral, 'General');
         $dlgPreferences->show_all();
         $response_id = $dlgPreferences->run();
         $dlgPreferences->destroy();
@@ -426,6 +432,15 @@ class Calendar
                 @unlink($startup_file);
             }
         }
+    }
+    
+    //Add new tab
+    public function add_new_tab($notebook, $widget, $tab_label) {
+        $eventbox = new GtkEventBox();
+        $label = new GtkLabel($tab_label);
+        $eventbox->add($label);
+        $label->show();
+        $notebook->append_page($widget, $eventbox);
     }
     
     public function onRightMenu()
