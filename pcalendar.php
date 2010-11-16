@@ -404,22 +404,22 @@ class Calendar
         $vboxGeneral = new GtkVBox();
         $checkboxStartLogin = new GtkCheckButton('Start at login.');
         
+        $vboxGeneral->pack_start($checkboxStartLogin);
+        $this->add_new_tab($notebook, $vboxGeneral, 'General');
+        
         $exists = false;
         if(file_exists($startup_file)){
             $checkboxStartLogin->set_active(true);
             $exists = true;
         }
+        //End Page General
         
+        //Start Window
         $dlgPreferences->add_buttons(array(
             Gtk::STOCK_CANCEL, Gtk::RESPONSE_CANCEL,
             Gtk::STOCK_OK, Gtk::RESPONSE_OK,
         )); 
         
-        $vboxGeneral->pack_start($checkboxStartLogin);
-        $this->add_new_tab($notebook, $vboxGeneral, 'General');
-        //End Page General
-        
-        //Start Window
         $dlgPreferences->show_all();
         $response_id = $dlgPreferences->run();
         $dlgPreferences->destroy();
