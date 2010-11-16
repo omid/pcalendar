@@ -258,6 +258,7 @@ class Calendar
     public function yearChangedInCalendar($obj, $val)
     {
         $max_year = 10000;
+        $max_year = 1416; // limitation of 32bits operating systems!
         $year = $this->year;
         $this->year += $val;
         if($this->year<1) $this->year=1;
