@@ -156,9 +156,9 @@ class Calendar
         $this->_table->set_col_spacings(2);
         $this->_table->set_row_spacings(2);
         
-        //midell frame
-		$frame = new GtkFrame();
-		//$frame->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#000000'));
+        // main frame
+        $frame = new GtkFrame();
+        //$frame->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#000000'));
 
         $frame->add($this->_table);
         $this->_leftmenu->get_child()->pack_start($frame, true, true, 0);
@@ -218,7 +218,8 @@ class Calendar
             $labelEvent->get_child()->set_markup("<big><span color=\"{$color}\">".persian_calendar::persian_no($d) . '</span></big> <span color="darkgray"><small><small>'.date('j', persian_calendar::mktime(0,0,0,$month,$d,$year)).'</small></small></span>');
             
             $frameL = new GtkFrame();
-			$frameL->add($labelEvent);
+            $frameL->set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
+            $frameL->add($labelEvent);
             
             $this->_table->attach($frameL, $days[$d]['x'], $days[$d]['x']+1, $days[$d]['y'], $days[$d]['y']+1, Gtk::EXPAND|Gtk::FILL, Gtk::EXPAND|Gtk::FILL, 0, 0);
             
@@ -363,6 +364,8 @@ class Calendar
     
     public function onPreferences()
     {
+        $startup_file = $_SERVER['HOME'] . '/.config/autostart/pcalendar.desktop';
+        
         $dlgPreferences = new GtkDialog('Persian Calendar Preferences');
         $dlgPreferences->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
         $dlgPreferences->set_default_size(300,50);
@@ -372,7 +375,7 @@ class Calendar
         
         $exists = false;
         $checkboxStartLogin = new GtkCheckButton('Start at login.');
-        if(file_exists($_SERVER["HOME"] . '/.config/autostart/pcalendar.desktop')){
+        if(file_exists($startup_file)){
             
             $checkboxStartLogin->set_active(true);
             $exists = true;
@@ -393,10 +396,10 @@ class Calendar
         {
             if($checkboxStartLogin->get_active() && !$exists)
             {
-                copy('/usr/share/pcalendar/pcalendar.desktop', $_SERVER["HOME"] . '/.config/autostart/pcalendar.desktop');
+                copy('/usr/share/pcalendar/pcalendar.desktop', $startup_file);
             }else
             {
-                @unlink($_SERVER["HOME"] . '/.config/autostart/pcalendar.desktop');
+                @unlink($startup_file);
             }
         }
     }
@@ -422,7 +425,7 @@ class Calendar
     public function notify($title, $body)
     {
         $d = new Dbus( Dbus::BUS_SESSION );
-        $n = $d->createProxy("org.freedesktop.Notifications", "/org/freedesktop/Notifications", "org.freedesktop.Notifications");
+        $n = $d->createProxy('org.freedesktop.Notifications', '/org/freedesktop/Notifications', 'org.freedesktop.Notifications');
         
         $id = $n->Notify(
             'Persian Calendar', new DBusUInt32( 0 ), // app_name, replaces_id
