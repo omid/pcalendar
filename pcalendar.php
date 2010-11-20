@@ -414,6 +414,25 @@ class Calendar
         }
         //End Page General
         
+        
+        //start Page calendars
+        $vboxCalendars = new GtkVBox();
+        
+        foreach(glob('/usr/share/pcalendar/events/*') as $f)
+        {
+            $checkboxCalendar00 = new GtkCheckButton($f);
+            $vboxCalendars->pack_start($checkboxCalendar00);
+        }
+        
+        $addFile = new GtkButton('Add Calender', true);
+        $addFile->connect('clicked', array($this, 'addCalendar'));
+        $vboxCalendars->pack_start($addFile);
+        //$this->FileOpenDlg();
+        
+        $this->add_new_tab($notebook, $vboxCalendars, 'Calendars');
+        //End Page Calendars
+        
+        
         //Start Window
         $dlgPreferences->add_buttons(array(
             Gtk::STOCK_CANCEL, Gtk::RESPONSE_CANCEL,
@@ -451,6 +470,24 @@ class Calendar
         $eventbox->add($label);
         $label->show();
         $notebook->append_page($widget, $eventbox);
+    }
+    
+    //add calendar
+    function addCalendar()
+    {
+        $dialog = new GtkFileChooserDialog('Add Calendar',
+                                           null,
+                                           Gtk::FILE_CHOOSER_ACTION_OPEN,
+                                           array(Gtk::STOCK_OK, Gtk::RESPONSE_OK),
+                                           null
+                                          );
+        
+        $dialog->show_all();
+        
+        if ($dialog->run() == Gtk::RESPONSE_OK) {
+            copy($dialog->get_filename(), '/usr/share/pcalendar/events/' . end(explode('/', $dialog->get_filename())));
+        }
+        $dialog->destroy();
     }
     
     public function onRightMenu()
