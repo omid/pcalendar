@@ -13,6 +13,7 @@ class Calendar
     protected $_tray;
     protected $_date;
     protected $_label;
+    protected $events;
     
     function __construct()
     {
@@ -57,6 +58,12 @@ class Calendar
     {
         foreach(glob('/usr/share/pcalendar/events/*.php') as $e){
             require($e);
+        }
+
+        foreach($events_info as $key => $val){
+            if(!isset($this->events[$key])){
+                $this->events[$key] = $val;
+            }
         }
         
         $ts = persian_calendar::mktime(0, 0, 0, $month, $day, $year);
@@ -266,8 +273,8 @@ class Calendar
 
     public function checkYear()
     {
-        $max_year = 1416; // limitation of 32bits operating systems!
-        $min_year = 1283; // limitation of 32bits operating systems!
+        $max_year = 1417; // limitation of 32bits operating systems!
+        $min_year = 1282; // limitation of 32bits operating systems!
         
         if($this->year<$min_year){
             $this->year=$min_year;
@@ -415,22 +422,22 @@ class Calendar
         //End Page General
         
         
-        //start Page calendars
-        $vboxCalendars = new GtkVBox();
+        // start events page
+        $vboxEvents = new GtkVBox();
         
-        foreach(glob('/usr/share/pcalendar/events/*') as $f)
+        foreach($this->events as $key => $val)
         {
-            $checkboxCalendar00 = new GtkCheckButton($f);
-            $vboxCalendars->pack_start($checkboxCalendar00);
+            $this->events[$key]['handle'] = new GtkCheckButton($val['name']);
+            $vboxEvents->pack_start($this->events[$key]['handle']);
         }
         
-        $addFile = new GtkButton('Add Calender', true);
-        $addFile->connect('clicked', array($this, 'addCalendar'));
-        $vboxCalendars->pack_start($addFile);
+        //$addFile = new GtkButton('Add Calender', true);
+        //$addFile->connect('clicked', array($this, 'addCalendar'));
+        //$vboxCalendars->pack_start($addFile);
         //$this->FileOpenDlg();
         
-        $this->add_new_tab($notebook, $vboxCalendars, 'Calendars');
-        //End Page Calendars
+        $this->add_new_tab($notebook, $vboxEvents, 'Events');
+        //End events page
         
         
         //Start Window

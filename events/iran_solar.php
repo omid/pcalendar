@@ -1,8 +1,7 @@
 <?php
 
-$events_info[] = array(
+$events_info['iran_solar'] = array(
     'name' => 'وقایع ایرانی',
-    'id'   => 'iran_solar'
 );
 
 $events[] = array (

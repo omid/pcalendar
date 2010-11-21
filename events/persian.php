@@ -1,9 +1,8 @@
 <?php
 
 return;
-$events_info[] = array(
+$events_info['persian'] = array(
     'name' => 'وقایع پارسی',
-    'id'   => 'persian'
 );
 
 $events[] = array (

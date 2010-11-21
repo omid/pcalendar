@@ -1,8 +1,7 @@
 <?php
 
-$events_info[] = array(
-    'name' => 'وقایع عربی و رسمی ایران',
-    'id'   => 'iran_lunar'
+$events_info['iran_lunar'] = array(
+    'name' => 'وقایع عربی و رسمی ایران'
 );
 
 $l_events = array (

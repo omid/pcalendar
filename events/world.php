@@ -1,9 +1,8 @@
 <?php
 // copyright http://www.farhangiran.com
 
-$events_info[] = array(
+$events_info['world'] = array(
     'name' => 'وقایع جهانی',
-    'id'   => 'world'
 );
 
 $events[] = array (
