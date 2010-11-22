@@ -399,7 +399,7 @@ class Calendar
         
         $dlgPreferences = new GtkDialog('Persian Calendar Preferences');
         $dlgPreferences->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
-        $dlgPreferences->set_default_size(300,50);
+        $dlgPreferences->set_default_size(300,200);
         //$dlgPreferences->set_resizable(false);
         $dlgPreferences->set_modal(true);
         $dlgPreferences->set_skip_pager_hint(true);
@@ -411,7 +411,7 @@ class Calendar
         $vboxGeneral = new GtkVBox();
         $checkboxStartLogin = new GtkCheckButton('Start at login.');
         
-        $vboxGeneral->pack_start($checkboxStartLogin);
+        $vboxGeneral->pack_start($checkboxStartLogin, false, false, 5);
         $this->add_new_tab($notebook, $vboxGeneral, 'General');
         
         $exists = false;
@@ -428,7 +428,7 @@ class Calendar
         foreach($this->events as $key => $val)
         {
             $this->events[$key]['handle'] = new GtkCheckButton($val['name']);
-            $vboxEvents->pack_start($this->events[$key]['handle']);
+            $vboxEvents->pack_start($this->events[$key]['handle'], false, false, 5);
         }
         
         //$addFile = new GtkButton('Add Calender', true);
