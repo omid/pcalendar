@@ -326,14 +326,17 @@ class Calendar
     {
         $this->_rightmenu = new GtkMenu();
 
+	$showNotify = new GtkMenuItem('Show Notify');
         $preferences = new GtkMenuItem('Preferences');
         $about = new GtkMenuItem('About');
         $quit = new GtkMenuItem('Quit');
         
+        $showNotify->connect('activate', array($this, 'onShowNotify'));
         $preferences->connect('activate', array($this, 'onPreferences'));
         $about->connect('activate', array($this, 'onAbout'));
         $quit->connect('activate', array($this, 'onQuit'));
         
+        $this->_rightmenu->append($showNotify);
         $this->_rightmenu->append($preferences);
         $this->_rightmenu->append($about);
         $this->_rightmenu->append(new GtkSeparatorMenuItem());
@@ -393,6 +396,11 @@ class Calendar
         $dlgAbout->destroy();
     }
     
+    public function onShowNotify()
+    {
+        //$this->notify(persian_calendar::date('l d F Y'), $today['title']);
+    }
+
     public function onPreferences()
     {
         $startup_file = $_SERVER['HOME'] . '/.config/autostart/pcalendar.desktop';
