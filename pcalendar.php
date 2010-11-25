@@ -441,10 +441,10 @@ class Calendar
         
         $this->add_new_tab($notebook, $vboxEvents, 'Events');
         
-        $eventsConfigFile = $_SERVER['HOME'] . '/.pcalendar/events.conf';
+        $eventsConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/events.conf';
         if(!file_exists($eventsConfigFile))
         {
-            @mkdir($_SERVER['HOME'] . '/.pcalendar/');
+            @mkdir($_SERVER['HOME'] . '/.config/pcalendar/');
             $eventsConfigBuffer = fopen($eventsConfigFile, "w");
             fclose($eventsConfigBuffer);
         }
