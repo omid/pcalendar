@@ -439,12 +439,28 @@ class Calendar
             $vboxEvents->pack_start($this->events[$key]['handle'], false, false, 5);
         }
         
-        //$addFile = new GtkButton('Add Calender', true);
-        //$addFile->connect('clicked', array($this, 'addCalendar'));
-        //$vboxCalendars->pack_start($addFile);
-        //$this->FileOpenDlg();
-        
         $this->add_new_tab($notebook, $vboxEvents, 'Events');
+        
+        $eventsConfigFile = $_SERVER['HOME'] . '/.pcalendar/events.conf';
+        if(!file_exists($eventsConfigFile))
+        {
+            @mkdir($_SERVER['HOME'] . '/.pcalendar/');
+            $eventsConfigBuffer = fopen($eventsConfigFile, "w");
+            fclose($eventsConfigBuffer);
+        }
+        $eventsConfigBuffer = fopen($eventsConfigFile, "r");
+        $eventsConfig = fgetss($eventsConfigBuffer);
+        if($eventsConfig == '')
+        {
+            foreach($this->events as $key => $val)
+            {
+                $this->events[$key]['handle']->set_active(true);
+            }
+        }else
+        {
+            echo "configed";
+        }
+        fclose($eventsConfigBuffer);
         //End events page
         
         
@@ -485,24 +501,6 @@ class Calendar
         $eventbox->add($label);
         $label->show();
         $notebook->append_page($widget, $eventbox);
-    }
-    
-    //add calendar
-    function addCalendar()
-    {
-        $dialog = new GtkFileChooserDialog('Add Calendar',
-                                           null,
-                                           Gtk::FILE_CHOOSER_ACTION_OPEN,
-                                           array(Gtk::STOCK_OK, Gtk::RESPONSE_OK),
-                                           null
-                                          );
-        
-        $dialog->show_all();
-        
-        if ($dialog->run() == Gtk::RESPONSE_OK) {
-            copy($dialog->get_filename(), '/usr/share/pcalendar/events/' . end(explode('/', $dialog->get_filename())));
-        }
-        $dialog->destroy();
     }
     
     public function onRightMenu()
