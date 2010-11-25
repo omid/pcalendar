@@ -446,11 +446,12 @@ class Calendar
         {
             @mkdir($_SERVER['HOME'] . '/.config/pcalendar/');
             $eventsConfigBuffer = fopen($eventsConfigFile, "w");
+            fwrite($eventsConfigBuffer, "[Default]");
             fclose($eventsConfigBuffer);
         }
         $eventsConfigBuffer = fopen($eventsConfigFile, "r");
         $eventsConfig = fgetss($eventsConfigBuffer);
-        if($eventsConfig == '')
+        if($eventsConfig == "[Default]")
         {
             foreach($this->events as $key => $val)
             {
@@ -458,7 +459,10 @@ class Calendar
             }
         }else
         {
-            echo "configed";
+            while($eventsConfig = fgetss($eventsConfigBuffer))
+            {
+                $this->events[trim($eventsConfig)]['handle']->set_active(true);                
+            }
         }
         fclose($eventsConfigBuffer);
         //End events page
@@ -490,6 +494,34 @@ class Calendar
                 @unlink($startup_file);
             }
             //End process of General tab
+            
+            //process of Events tab
+            $default = true;
+            foreach($this->events as $key => $val)
+            {
+                if(!$this->events[$key]['handle']->get_active())
+                {
+                    $default = false;
+                }
+            }
+            
+            $eventsConfigBuffer = fopen($eventsConfigFile, "w");
+            if($default == true)
+            {
+                fwrite($eventsConfigBuffer, "[Default]");
+            }else
+            {
+                fwrite($eventsConfigBuffer, "[Enable]\r\n");
+                foreach($this->events as $key => $val)
+                {
+                    if($this->events[$key]['handle']->get_active())
+                    {
+                        fwrite($eventsConfigBuffer, $key . "\r\n");
+                    }
+                }
+            }
+            fclose($eventsConfigBuffer);
+            //End process of Events tab
         }
         //End process of Preferences
     }
