@@ -40,7 +40,7 @@ class Calendar
             }
             $icon = file_get_contents($icon);
             $icon = str_replace('۱۰', persian_calendar::date('d'), $icon);
-            $icon = file_put_contents('/tmp/today.svg', $icon);
+            file_put_contents('/tmp/today.svg', $icon);
             
             $this->_tray->set_tooltip(persian_calendar::date('j M Y'));
             $this->_tray->set_from_file('/tmp/today.svg');
@@ -326,7 +326,7 @@ class Calendar
     {
         $this->_rightmenu = new GtkMenu();
 
-	$showNotify = new GtkMenuItem('Show Notify');
+        $showNotify = new GtkMenuItem('Show Notify');
         $preferences = new GtkMenuItem('Preferences');
         $about = new GtkMenuItem('About');
         $quit = new GtkMenuItem('Quit');
@@ -380,7 +380,7 @@ class Calendar
         $dlgAbout->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
         
         $dlgAbout->set_name('Persian Calendar');
-        $dlgAbout->set_version('0.4');
+        $dlgAbout->set_version('0.5');
          
         $dlgAbout->set_comments('Persian Calendar is a calendar for Persians.');
         $dlgAbout->set_copyright('GPL version 3');
@@ -398,7 +398,20 @@ class Calendar
     
     public function onShowNotify()
     {
-        //$this->notify(persian_calendar::date('l d F Y'), $today['title']);
+        $today = $this->getEvent(persian_calendar::date('Y', '', false), persian_calendar::date('m', '', false), persian_calendar::date('d', '', false));
+        
+        if($today['holiday']){
+            $icon = '/usr/share/pcalendar/pix/holiday.svg';
+        } else {
+            $icon = '/usr/share/pcalendar/pix/normalday.svg';
+        }
+        $icon = file_get_contents($icon);
+        $icon = str_replace('۱۰', persian_calendar::date('d'), $icon);
+        file_put_contents('/tmp/today.svg', $icon);
+
+        $this->notify(persian_calendar::date('l d F Y'), $today['title']);
+
+        @unlink('/tmp/today.svg');
     }
 
     public function onPreferences()
