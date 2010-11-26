@@ -65,7 +65,7 @@ class Calendar
                 $this->events[$key] = $val;
             }
         }
-        
+        var_dump($this->events);
         $ts = persian_calendar::mktime(0, 0, 0, $month, $day, $year);
         
         // find today has an event or not? / is it holiday or not?
@@ -458,13 +458,14 @@ class Calendar
         if(!file_exists($eventsConfigFile))
         {
             @mkdir($_SERVER['HOME'] . '/.config/pcalendar/');
-            $eventsConfigBuffer = fopen($eventsConfigFile, "w");
-            fwrite($eventsConfigBuffer, "[Default]");
+            $eventsConfigBuffer = fopen($eventsConfigFile, 'w');
+            fwrite($eventsConfigBuffer, '[Default]');
             fclose($eventsConfigBuffer);
         }
-        $eventsConfigBuffer = fopen($eventsConfigFile, "r");
+        
+        $eventsConfigBuffer = fopen($eventsConfigFile, 'r');
         $eventsConfig = fgetss($eventsConfigBuffer);
-        if($eventsConfig == "[Default]")
+        if($eventsConfig == '[Default]')
         {
             foreach($this->events as $key => $val)
             {
@@ -518,18 +519,18 @@ class Calendar
                 }
             }
             
-            $eventsConfigBuffer = fopen($eventsConfigFile, "w");
+            $eventsConfigBuffer = fopen($eventsConfigFile, 'w');
             if($default == true)
             {
-                fwrite($eventsConfigBuffer, "[Default]");
+                fwrite($eventsConfigBuffer, '[Default]');
             }else
             {
-                fwrite($eventsConfigBuffer, "[Enable]\r\n");
+                fwrite($eventsConfigBuffer, "[Enable]\n");
                 foreach($this->events as $key => $val)
                 {
                     if($this->events[$key]['handle']->get_active())
                     {
-                        fwrite($eventsConfigBuffer, $key . "\r\n");
+                        fwrite($eventsConfigBuffer, $key . "\n");
                     }
                 }
             }
