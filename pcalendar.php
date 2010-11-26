@@ -56,8 +56,12 @@ class Calendar
 
     private function getEvent($year, $month, $day)
     {
+        $events = $events_info = array();
+        
         foreach(glob('/usr/share/pcalendar/events/*.php') as $e){
-            require($e);
+            $key = substr(basename($e), 0, strrpos(basename($e), '.'));
+            // if event list already defined and is active include that file!
+            if(!isset($this->events[$key]) || @$this->events[$key]['active']) require($e);
         }
 
         foreach($events_info as $key => $val){
@@ -464,7 +468,7 @@ class Calendar
         }
         
         $eventsConfigBuffer = fopen($eventsConfigFile, 'r');
-        $eventsConfig = fgetss($eventsConfigBuffer);
+        $eventsConfig = fgets($eventsConfigBuffer);
         if($eventsConfig == '[Default]')
         {
             foreach($this->events as $key => $val)
@@ -473,7 +477,7 @@ class Calendar
             }
         }else
         {
-            while($eventsConfig = trim(fgetss($eventsConfigBuffer)) && isset($this->events[$eventsConfig]))
+            while($eventsConfig = trim(fgets($eventsConfigBuffer)) && isset($this->events[$eventsConfig]))
             {
                 $this->events[$eventsConfig]['handle']->set_active(true);                
             }
