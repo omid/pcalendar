@@ -65,7 +65,7 @@ class Calendar
                 $this->events[$key] = $val;
             }
         }
-        var_dump($this->events);
+        
         $ts = persian_calendar::mktime(0, 0, 0, $month, $day, $year);
         
         // find today has an event or not? / is it holiday or not?
@@ -473,9 +473,9 @@ class Calendar
             }
         }else
         {
-            while($eventsConfig = fgetss($eventsConfigBuffer))
+            while($eventsConfig = trim(fgetss($eventsConfigBuffer)) && isset($this->events[$eventsConfig]))
             {
-                $this->events[trim($eventsConfig)]['handle']->set_active(true);                
+                $this->events[$eventsConfig]['handle']->set_active(true);                
             }
         }
         fclose($eventsConfigBuffer);
@@ -530,7 +530,10 @@ class Calendar
                 {
                     if($this->events[$key]['handle']->get_active())
                     {
+                        $this->events[$key]['active'] = true;
                         fwrite($eventsConfigBuffer, $key . "\n");
+                    } else {
+                        $this->events[$key]['active'] = false;
                     }
                 }
             }
