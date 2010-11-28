@@ -215,8 +215,15 @@ class Calendar
         $days = array();
         $y = 1;
         
+        $first_day_of_month = null;
+        $last_day_of_month  = null;
+        
         for($d=1; $d<=$max_days; $d++){
             $weekday = persian_calendar::date('N', persian_calendar::mktime(0, 0, 0, $month, $d, $year), false);
+            
+            if($first_day_of_month === null) $first_day_of_month = abs($weekday-7);
+            if($d == $max_days) $last_day_of_month = abs($weekday-7);
+
             $days[$d] = array('x' => abs($weekday-7), 'y' => $y);
             $today = $this->getEvent($year, $month, $d);
             $days[$d] = array_merge($days[$d], $today);
@@ -226,18 +233,15 @@ class Calendar
             $labelEvent->get_child()->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
             $labelEvent->get_child()->set_use_markup(true);
             $this->bs[$d] = $labelEvent->connect('button_press_event', array($this, 'dayChangedInCalendar'), $d);
-            $labelEvent->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#ffffff'));
 
             if($days[$d]['holiday']){
                 $color = 'red';
-                $selected_color = '#ff9999';
             } else {
                 $color = 'black';
-                $selected_color = '#ffffff';
             }
             
             if($day == $d){
-                $labelEvent->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#555555')); // holiday / selected
+                $labelEvent->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#dfdfdf')); // holiday / selected
                 if($today['title']){
                     // fill event title
                     $l = new GtkLabel();
@@ -248,7 +252,6 @@ class Calendar
                     $l->set_markup("<span color=\"{$color}\">" . $today['title'] . '</span>');
                     $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
                 }
-                $color = $selected_color;
             }
             $labelEvent->get_child()->set_markup(" <big><span color=\"{$color}\">".persian_calendar::persian_no($d) . '</span></big> <span color="darkgray"><small><small>'.date('j', persian_calendar::mktime(0,0,0,$month,$d,$year)).'</small></small></span> ');
             
@@ -260,6 +263,19 @@ class Calendar
             
             // change Y after friday!
             if($weekday == 7) $y++;
+        }
+        
+        // fill empty cells of the table
+        for($first_day_of_month = $first_day_of_month+1; $first_day_of_month<=6; $first_day_of_month++){
+            $l  = new GtkEventBox();
+            $l->add(new GtkLabel());
+            $this->_table->attach($l, $first_day_of_month, $first_day_of_month+1, 1, 2, Gtk::FILL, Gtk::FILL, 0, 0);
+        }
+
+        for($last_day_of_month = $last_day_of_month-1; $last_day_of_month>=0; $last_day_of_month--){
+            $l  = new GtkEventBox();
+            $l->add(new GtkLabel());
+            $this->_table->attach($l, $last_day_of_month, $last_day_of_month+1, $y, $y+1, Gtk::FILL, Gtk::FILL, 0, 0);
         }
         
         $this->_leftmenu->show_all();
