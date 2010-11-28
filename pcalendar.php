@@ -533,6 +533,10 @@ class Calendar
             if($default == true)
             {
                 fwrite($eventsConfigBuffer, '[Default]');
+                foreach($this->events as $key => $val)
+                {
+                    $this->events[$key]['active'] = true;
+                }
             }else
             {
                 foreach($this->events as $key => $val)
