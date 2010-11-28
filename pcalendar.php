@@ -19,6 +19,9 @@ class Calendar
     {
         $this->_date = '';
         
+        $this->loadInitialEvents();
+        $this->loadConfig();
+        
         $this->createTray();
         $this->createRightMenu();
         $this->onDayChange();
@@ -54,6 +57,21 @@ class Calendar
         return true;
     }
 
+    private function loadInitialEvents()
+    {
+        foreach(glob('/usr/share/pcalendar/events/*.php') as $e){
+            $key = substr(basename($e), 0, strrpos(basename($e), '.'));
+            // if event list already defined and is active include that file!
+            if(!isset($this->events[$key]) || @$this->events[$key]['active']) require($e);
+        }
+
+        foreach($events_info as $key => $val){
+            if(!isset($this->events[$key])){
+                $this->events[$key] = $val;
+            }
+        }
+    }
+    
     private function getEvent($year, $month, $day)
     {
         $events = $events_info = array();
@@ -117,19 +135,20 @@ class Calendar
         $hbox = new GtkHBox();
         $mainhbox->pack_start($hbox, true,true, 0);
         
-        $l = new GtkButton();
-        $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
+        $l = new GtkButton('<');
+        //$l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
         $l->set_relief(Gtk::RELIEF_NONE);
         $l->set_can_focus(false);
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'monthChangedInCalendar'), 1);
         
         $l = new GtkLabel(persian_calendar::date('F', $ts));
-        $l->set_size_request(50,25);
+        $l->set_size_request(40,25);
+        $l->modify_font(new PangoFontDescription('Dejavu Sans Book 7'));
         $hbox->pack_start($l);
 
-        $l = new GtkButton();
-        $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-next.svg'));
+        $l = new GtkButton('>');
+        //$l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-next.svg'));
         $l->set_relief(Gtk::RELIEF_NONE);
         $l->set_can_focus(false);
         $hbox->pack_start($l, false, false);
@@ -139,6 +158,7 @@ class Calendar
         $GoToday = new GtkButton('امروز');
         $GoToday->set_relief(Gtk::RELIEF_NONE);
         $GoToday->set_can_focus(false);
+        $GoToday->get_child()->modify_font(new PangoFontDescription('Dejavu Sans Book 7'));
         $GoToday->connect('clicked', array($this, 'goTodayInCalendar'));
         $hbox->pack_start($GoToday, false, false);
         
@@ -146,30 +166,30 @@ class Calendar
         $hbox = new GtkHBox();
         $mainhbox->pack_start($hbox, true,true, 0);
         
-        $l = new GtkButton();
-        $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
+        $l = new GtkButton('<');
+        //$l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
         $l->set_relief(Gtk::RELIEF_NONE);
         $l->set_can_focus(false);
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'yearChangedInCalendar'), 1);
         
         $l = new GtkLabel(persian_calendar::date('Y', $ts));
+        $l->modify_font(new PangoFontDescription('Dejavu Sans Book 7'));
         $hbox->pack_start($l);
 
-        $l = new GtkButton();
-        $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-next.svg'));
+        $l = new GtkButton('>');
+        //$l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-next.svg'));
         $l->set_relief(Gtk::RELIEF_NONE);
         $l->set_can_focus(false);
         $hbox->pack_start($l, false, false);
         $l->connect('clicked', array($this, 'yearChangedInCalendar'), -1);
         
-        $this->_table = new GtkTable(1, 1, true);
-        $this->_table->set_col_spacings(2);
-        $this->_table->set_row_spacings(2);
+        $this->_table = new GtkTable();
+        //$this->_table->set_col_spacings(2);
+        //$this->_table->set_row_spacings(2);
         
         // main frame
         $frame = new GtkFrame();
-        //$frame->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#000000'));
 
         $frame->add($this->_table);
         $this->_leftmenu->get_child()->pack_start($frame, true, true, 0);
@@ -184,6 +204,7 @@ class Calendar
 
         // print persian and gregorian dates
         $l = new GtkLabel();
+        $l->modify_font(new PangoFontDescription('Dejavu Sans Book 7'));
         $l->set_use_markup(true);
         $l->set_padding(0,5);
         $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
@@ -203,7 +224,7 @@ class Calendar
             $labelEvent->add(new GtkLabel());
             $labelEvent->get_child()->set_use_markup(true);
             $this->bs[$d] = $labelEvent->connect('button_press_event', array($this, 'dayChangedInCalendar'), $d);
-            //$labelEvent->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#ffffff'));
+            $labelEvent->modify_bg(Gtk::STATE_NORMAL, GdkColor::parse('#ffffff'));
 
             if($days[$d]['holiday']){
                 $color = 'red';
@@ -218,6 +239,7 @@ class Calendar
                 if($today['title']){
                     // fill event title
                     $l = new GtkLabel();
+                    $l->modify_font(new PangoFontDescription('Dejavu Sans Book 7'));
                     $l->set_use_markup(true);
                     $l->set_line_wrap(true);
                     $l->set_width_chars(32);
@@ -228,11 +250,11 @@ class Calendar
             }
             $labelEvent->get_child()->set_markup("<big><span color=\"{$color}\">".persian_calendar::persian_no($d) . '</span></big> <span color="darkgray"><small><small>'.date('j', persian_calendar::mktime(0,0,0,$month,$d,$year)).'</small></small></span>');
             
-            $frameL = new GtkFrame();
-            $frameL->set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
-            $frameL->add($labelEvent);
+            //$frameL = new GtkFrame();
+            //$frameL->set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
+            //$frameL->add($labelEvent);
             
-            $this->_table->attach($frameL, $days[$d]['x'], $days[$d]['x']+1, $days[$d]['y'], $days[$d]['y']+1, Gtk::EXPAND|Gtk::FILL, Gtk::EXPAND|Gtk::FILL, 0, 0);
+            $this->_table->attach($labelEvent, $days[$d]['x'], $days[$d]['x']+1, $days[$d]['y'], $days[$d]['y']+1, Gtk::FILL, Gtk::FILL, 0, 0);
             
             // change Y after friday!
             if($weekday == 7) $y++;
@@ -446,7 +468,6 @@ class Calendar
         }
         //End Page General
         
-        
         // start events page
         $vboxEvents = new GtkVBox();
         
@@ -457,40 +478,16 @@ class Calendar
         }
         
         $this->add_new_tab($notebook, $vboxEvents, 'Events');
-        
-        $eventsConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/events.conf';
-        if(!file_exists($eventsConfigFile))
+
+        // set config to checkboxes
+        foreach($this->events as $key => $val)
         {
-            @mkdir($_SERVER['HOME'] . '/.config/pcalendar/');
-            $eventsConfigBuffer = fopen($eventsConfigFile, 'w');
-            fwrite($eventsConfigBuffer, '[Default]');
-            fclose($eventsConfigBuffer);
-        }
-        
-        $eventsConfigBuffer = fopen($eventsConfigFile, 'r');
-        $eventsConfig = fgets($eventsConfigBuffer);
-        if($eventsConfig == '[Default]')
-        {
-            foreach($this->events as $key => $val)
+            if($this->events[$key]['active'])
             {
                 $this->events[$key]['handle']->set_active(true);
             }
-        }else
-        {
-            $eventsConfigArray = json_decode($eventsConfig);
-            foreach($eventsConfigArray as $e)
-            {
-                $this->events[$e]['handle']->set_active(true);
-            }
-            //to Omid: in ghesmat dg lazem nist, chon taghir dade bodish pak nakardam, age lazem nist pakesh kon plz :)
-            //while($eventsConfig = trim(fgets($eventsConfigBuffer)) && isset($this->events[$eventsConfig]))
-            //{
-            //    $this->events[$eventsConfig]['handle']->set_active(true);                
-            //}
         }
-        fclose($eventsConfigBuffer);
         //End events page
-        
         
         //Start Window
         $dlgPreferences->add_buttons(array(
@@ -520,41 +517,74 @@ class Calendar
             //End process of General tab
             
             //process of Events tab
-            $default = true;
             foreach($this->events as $key => $val)
             {
-                if(!$this->events[$key]['handle']->get_active())
-                {
-                    $default = false;
-                }
-            }
-            
-            $eventsConfigBuffer = fopen($eventsConfigFile, 'w');
-            if($default == true)
-            {
-                fwrite($eventsConfigBuffer, '[Default]');
-                foreach($this->events as $key => $val)
+                if($this->events[$key]['handle']->get_active())
                 {
                     $this->events[$key]['active'] = true;
+                } else {
+                    $this->events[$key]['active'] = false;
                 }
-            }else
-            {
-                foreach($this->events as $key => $val)
-                {
-                    if($this->events[$key]['handle']->get_active())
-                    {
-                        $this->events[$key]['active'] = true;
-                        $eventsTMP[] = $key;
-                    } else {
-                        $this->events[$key]['active'] = false;
-                    }
-                }
-                fwrite($eventsConfigBuffer, json_encode($eventsTMP));
             }
-            fclose($eventsConfigBuffer);
+            $this->saveConfig();
             //End process of Events tab
         }
         //End process of Preferences
+    }
+
+    private function loadConfig()
+    {
+        $eventsConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/events.conf';
+
+        if(!file_exists($eventsConfigFile)){
+            $this->saveConfig();
+        }
+        
+        $eventsConfigBuffer = trim(file_get_contents($eventsConfigFile));
+        
+        if($eventsConfigBuffer) // default config!
+        {
+            foreach($this->events as $key => $val)
+            {
+                $this->events[$key]['active'] = true;
+            }
+        }else
+        {
+            $eventsConfigBuffer = json_decode($eventsConfigBuffer);
+            foreach($eventsConfigBuffer['events'] as $e)
+            {
+                $this->events[$key]['active'] = true;
+            }
+            foreach($this->events as $key => $val)
+            {
+                if(in_array($key, $eventsConfigBuffer)){
+                    $this->events[$key]['active'] = true;
+                } else {
+                    $this->events[$key]['active'] = false;
+                }
+            }
+        }
+    }
+
+    private function saveConfig()
+    {
+        $eventsConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/events.conf';
+        
+        if(!file_exists($eventsConfigFile))
+        {
+            @mkdir($_SERVER['HOME'] . '/.config/pcalendar/');
+            touch($eventsConfigFile);
+        }
+
+        $eventsTMP['events'] = array();
+        foreach($this->events as $key => $val)
+        {
+            if(!isset($this->events[$key]['active']) || $this->events[$key]['active'])
+            {
+                $eventsTMP[] = $key;
+            }
+        }
+        file_put_contents($eventsConfigFile, json_encode($eventsTMP));
     }
     
     //Add new tab
