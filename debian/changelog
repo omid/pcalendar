@@ -1,7 +1,9 @@
-pcalendar (0.4.0-1) maverick; urgency=low
+pcalendar (0.5.0-1) maverick; urgency=low
 
-  * interface changed again!
-  * email added to about dialog
-  * world events added
+  * events added to preferences (Thanks to Mostafa Mirmousavi)
+  * Show notify added to rigt click menu (Thanks to Mostafa Mirmousavi)
+  * Interface changed
+  * year limited for all users because of 32bit OSes
+  * all fonts changed to "freefarsi"!
 
  -- omidmottaghi <omidmr@gmail.com>  Tue, 13 Jul 2010 21:57:02 +0430
