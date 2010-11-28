@@ -144,7 +144,7 @@ class Calendar
         
         $l = new GtkLabel(persian_calendar::date('F', $ts));
         $l->set_size_request(35,25);
-        $l->modify_font(new PangoFontDescription('FreeFarsi Regular 8'));
+        $l->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
         $hbox->pack_start($l);
 
         $l = new GtkButton();
@@ -158,7 +158,7 @@ class Calendar
         $GoToday = new GtkButton('امروز');
         $GoToday->set_relief(Gtk::RELIEF_NONE);
         $GoToday->set_can_focus(false);
-        $GoToday->get_child()->modify_font(new PangoFontDescription('FreeFarsi Regular 8'));
+        $GoToday->get_child()->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
         $GoToday->connect('clicked', array($this, 'goTodayInCalendar'));
         $hbox->pack_start($GoToday, false, false);
         
@@ -174,7 +174,7 @@ class Calendar
         $l->connect('clicked', array($this, 'yearChangedInCalendar'), 1);
         
         $l = new GtkLabel(persian_calendar::date('Y', $ts));
-        $l->modify_font(new PangoFontDescription('FreeFarsi Regular 8'));
+        $l->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
         $hbox->pack_start($l);
 
         $l = new GtkButton();
@@ -197,7 +197,7 @@ class Calendar
         // fill week names
         for($d=0; $d<7; $d++){
             $b = new GtkLabel();
-            $b->modify_font(new PangoFontDescription('FreeFarsi Regular 8'));
+            $b->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
             $b->set_use_markup(true);
             $b->set_markup($week_names[$d]);
             $this->_table->attach($b, abs($d-6), abs($d-6)+1, 0, 1, 0, 0, 0, 0);
@@ -205,7 +205,7 @@ class Calendar
 
         // print persian and gregorian dates
         $l = new GtkLabel();
-        $l->modify_font(new PangoFontDescription('FreeFarsi Regular 8'));
+        $l->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
         $l->set_use_markup(true);
         $l->set_padding(0,5);
         $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
@@ -230,7 +230,7 @@ class Calendar
             
             $labelEvent  = new GtkEventBox();
             $labelEvent->add(new GtkLabel());
-            $labelEvent->get_child()->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
+            $labelEvent->get_child()->modify_font(new PangoFontDescription('FreeFarsi Regular 11'));
             $labelEvent->get_child()->set_use_markup(true);
             $this->bs[$d] = $labelEvent->connect('button_press_event', array($this, 'dayChangedInCalendar'), $d);
 
@@ -245,7 +245,7 @@ class Calendar
                 if($today['title']){
                     // fill event title
                     $l = new GtkLabel();
-                    $l->modify_font(new PangoFontDescription('FreeFarsi Regular 8'));
+                    $l->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
                     $l->set_use_markup(true);
                     $l->set_line_wrap(true);
                     $l->set_width_chars(32);
