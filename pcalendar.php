@@ -477,10 +477,16 @@ class Calendar
             }
         }else
         {
-            while($eventsConfig = trim(fgets($eventsConfigBuffer)) && isset($this->events[$eventsConfig]))
+            $eventsConfigArray = json_decode($eventsConfig);
+            foreach($eventsConfigArray as $e)
             {
-                $this->events[$eventsConfig]['handle']->set_active(true);                
+                $this->events[$e]['handle']->set_active(true);
             }
+            //to Omid: in ghesmat dg lazem nist, chon taghir dade bodish pak nakardam, age lazem nist pakesh kon plz :)
+            //while($eventsConfig = trim(fgets($eventsConfigBuffer)) && isset($this->events[$eventsConfig]))
+            //{
+            //    $this->events[$eventsConfig]['handle']->set_active(true);                
+            //}
         }
         fclose($eventsConfigBuffer);
         //End events page
@@ -529,17 +535,17 @@ class Calendar
                 fwrite($eventsConfigBuffer, '[Default]');
             }else
             {
-                fwrite($eventsConfigBuffer, "[Enable]\n");
                 foreach($this->events as $key => $val)
                 {
                     if($this->events[$key]['handle']->get_active())
                     {
                         $this->events[$key]['active'] = true;
-                        fwrite($eventsConfigBuffer, $key . "\n");
+                        $eventsTMP[] = $key;
                     } else {
                         $this->events[$key]['active'] = false;
                     }
                 }
+                fwrite($eventsConfigBuffer, json_encode($eventsTMP));
             }
             fclose($eventsConfigBuffer);
             //End process of Events tab
