@@ -1,4 +1,4 @@
-pcalendar (0.5.0-1) maverick; urgency=low
+pcalendar (0.6.0-1) maverick; urgency=low
 
   * events added to preferences (Thanks to Mostafa Mirmousavi)
   * Show notify added to rigt click menu (Thanks to Mostafa Mirmousavi)

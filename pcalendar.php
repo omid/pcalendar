@@ -133,7 +133,7 @@ class Calendar
         $this->_leftmenu->get_child()->pack_start($mainhbox, true, true, 0);
 
         $hbox = new GtkHBox();
-        $mainhbox->pack_start($hbox, true,true, 0);
+        $mainhbox->pack_start($hbox, false, false, 0);
         
         $l = new GtkButton();
         $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
@@ -143,7 +143,7 @@ class Calendar
         $l->connect('clicked', array($this, 'monthChangedInCalendar'), 1);
         
         $l = new GtkLabel(persian_calendar::date('F', $ts));
-        $l->set_size_request(35,25);
+        $l->set_size_request(55,25);
         $l->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
         $hbox->pack_start($l);
 
@@ -160,11 +160,11 @@ class Calendar
         $GoToday->set_can_focus(false);
         $GoToday->get_child()->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
         $GoToday->connect('clicked', array($this, 'goTodayInCalendar'));
-        $hbox->pack_start($GoToday, false, false);
+        $mainhbox->pack_start($GoToday, true, true);
         
         // year panel
         $hbox = new GtkHBox();
-        $mainhbox->pack_start($hbox, true,true, 0);
+        $mainhbox->pack_start($hbox, false, false, 0);
         
         $l = new GtkButton();
         $l->set_image(GtkImage::new_from_file('/usr/share/pcalendar/pix/go-previous.svg'));
@@ -174,6 +174,7 @@ class Calendar
         $l->connect('clicked', array($this, 'yearChangedInCalendar'), 1);
         
         $l = new GtkLabel(persian_calendar::date('Y', $ts));
+        $l->set_size_request(35,25);
         $l->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
         $hbox->pack_start($l);
 
@@ -424,7 +425,7 @@ class Calendar
         $dlgAbout->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
         
         $dlgAbout->set_name('Persian Calendar');
-        $dlgAbout->set_version('0.5');
+        $dlgAbout->set_version('0.6');
          
         $dlgAbout->set_comments('Persian Calendar is a calendar for Persians.');
         $dlgAbout->set_copyright('GPL version 3');
