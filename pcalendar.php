@@ -371,17 +371,21 @@ class Calendar
     {
         $this->_rightmenu = new GtkMenu();
 
-        $showNotify = new GtkMenuItem('Show Notify');
-        $preferences = new GtkMenuItem('Preferences');
-        $about = new GtkMenuItem('About');
-        $quit = new GtkMenuItem('Quit');
+        $showNotify = new GtkMenuItem('نمایش تاریخ');
+        $showNorouzTime = new GtkMenuItem('لحظه تحویل سال نو');
+        $preferences = new GtkMenuItem('تنظیمات');
+        $about = new GtkMenuItem('درباره');
+        $quit = new GtkMenuItem('خروج');
         
         $showNotify->connect('activate', array($this, 'onShowNotify'));
+        $showNorouzTime->connect('activate', array($this, 'onShowNorouzTime'));
         $preferences->connect('activate', array($this, 'onPreferences'));
         $about->connect('activate', array($this, 'onAbout'));
         $quit->connect('activate', array($this, 'onQuit'));
         
         $this->_rightmenu->append($showNotify);
+        $this->_rightmenu->append($showNorouzTime);
+        $this->_rightmenu->append(new GtkSeparatorMenuItem());
         $this->_rightmenu->append($preferences);
         $this->_rightmenu->append($about);
         $this->_rightmenu->append(new GtkSeparatorMenuItem());
@@ -407,13 +411,30 @@ class Calendar
         $this->day = persian_calendar::date('j', '', false);
         $this->dateChangedInCalendar();
     }
-
+    
     function __destruct()
     {
         Gtk::main_quit();
         exit();
     }
 
+    public function onShowNorouzTime()
+    {
+        // 31556912 is length of each Persian year, according to ghiasabadi.com
+        $start = persian_calendar::mktime(21, 2, 13, 12, 29, 1388);
+        
+        $delta = persian_calendar::date('Y', '', false) - 1389 + 1;
+
+        $start = $start + ($delta * 31556912);
+        if ($start <= 0) {
+            $start = 0;
+        }
+        
+        $msg = 'لحظه تحویل سال ' . persian_calendar::persian_no(persian_calendar::date('Y', $start, false) + 1);
+        //$this->notify($msg . "\t\t\t" . persian_calendar::date('l d F Y ساعت H و i دقیقه و s ثانیه', $start));
+        $this->notify($msg, persian_calendar::date('l d F Y ساعت H و i دقیقه و s ثانیه', $start));
+    }
+    
     public function onQuit()
     {
         $this->__destruct();
@@ -633,7 +654,7 @@ class Calendar
         }
     }
 
-    public function notify($title, $body)
+    public function notify($title, $body='')
     {
         $d = new Dbus( Dbus::BUS_SESSION );
         $n = $d->createProxy('org.freedesktop.Notifications', '/org/freedesktop/Notifications', 'org.freedesktop.Notifications');

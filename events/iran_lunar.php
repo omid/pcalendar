@@ -1,7 +1,7 @@
 <?php
 
 $events_info['iran_lunar'] = array(
-    'name' => 'وقایع عربی و رسمی ایران'
+    'name' => 'مناسبت‌های عربی و رسمی ایران'
 );
 
 $l_events = array (
@@ -28,10 +28,10 @@ $l_events = array (
 // events in lunar system shifts back 10 days each year!
 $delta = persian_calendar::date('Y', '', false) - 1389;
 $leap = persian_calendar::date('L');
-
+var_dump($delta);
 foreach($l_events as $index => $e){
     $e['day'] = $e['day'] - ($delta * 10);
-    if ($e['day'] <= 0) {
+    while ($e['day'] <= 0) {
         $e['day'] += 365 + $leap;
     }
     $l_events[$index] = $e;

@@ -1,7 +1,7 @@
 <?php
 
 $events_info['iran_solar'] = array(
-    'name' => 'وقایع ایرانی',
+    'name' => 'مناسبت‌های ایرانی',
 );
 
 $events[] = array (

@@ -2,7 +2,7 @@
 // copyright http://www.farhangiran.com
 
 $events_info['world'] = array(
-    'name' => 'وقایع جهانی',
+    'name' => 'مناسبت‌های جهانی',
 );
 
 $events[] = array (
