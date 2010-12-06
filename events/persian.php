@@ -86,3 +86,4 @@ $events[] = array (
 // چارشنبه سوری، جشن شب چهارشنبه آخر
 // last wednesday of the year
 // چارشنبه آخر
+//if(persian_calendar::date('N', $ts, false) == 7) $today['holiday'] = true;

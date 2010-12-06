@@ -26,9 +26,13 @@ $l_events = array (
 );
 /* @TODO if there is two leap year in the delta then what should I do? in the lunar calendars we have leap years or not? */
 // events in lunar system shifts back 10 days each year!
-$delta = persian_calendar::date('Y', '', false) - 1389;
+if(isset($year)){
+    $delta = $year - 1389;
+} else {
+    $delta = persian_calendar::date('Y', '', false) - 1389;
+}
 $leap = persian_calendar::date('L');
-var_dump($delta);
+
 foreach($l_events as $index => $e){
     $e['day'] = $e['day'] - ($delta * 10);
     while ($e['day'] <= 0) {
