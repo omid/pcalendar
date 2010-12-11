@@ -16,7 +16,35 @@
    inkscape:version="0.48.0 r9654"
    sodipodi:docname="holiday.svg">
   <defs
-     id="defs4" />
+     id="defs4">
+    <filter
+       id="filter2985"
+       inkscape:menu-tooltip="Draws a black outline around"
+       inkscape:menu="ABCs"
+       inkscape:label="Black outline"
+       color-interpolation-filters="sRGB">
+      <feGaussianBlur
+         id="feGaussianBlur2987"
+         stdDeviation="2"
+         in="SourceAlpha"
+         result="result0" />
+      <feComposite
+         id="feComposite2989"
+         in2="result0"
+         result="result3"
+         operator="arithmetic"
+         in="SourceGraphic"
+         k2="1"
+         k3="10" />
+      <feComposite
+         id="feComposite2991"
+         in2="result3"
+         k2="1"
+         operator="in"
+         in="result3"
+         result="result4" />
+    </filter>
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -26,7 +54,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="2.8284271"
      inkscape:cx="177.14251"
-     inkscape:cy="72.643494"
+     inkscape:cy="72.820271"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -54,17 +82,12 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-924.36218)">
-    <path
-       style="fill:#eae3d1;stroke:#000000;stroke-width:2.01431394000000008;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;fill-opacity:1"
-       d="M 19.15625 5 C 11.309822 5 5 11.339724 5 19.1875 L 5 108.8125 C 5 116.66028 11.309822 123 19.15625 123 L 108.84375 123 C 116.69018 123 123 116.66028 123 108.8125 L 123 19.1875 C 123 11.339724 116.69018 5 108.84375 5 L 19.15625 5 z M 25.65625 18.125 L 102.34375 18.125 C 104.95923 18.125 107.0625 20.227825 107.0625 22.84375 L 107.0625 24.34375 C 107.0625 26.959675 104.95923 29.0625 102.34375 29.0625 L 25.65625 29.0625 C 23.040774 29.0625 20.9375 26.959675 20.9375 24.34375 L 20.9375 22.84375 C 20.9375 20.227825 23.040774 18.125 25.65625 18.125 z M 30.375 41.5 L 97.625 41.5 C 102.85595 41.5 107.0625 45.736899 107.0625 50.96875 L 107.0625 99.8125 C 107.0625 105.04435 102.85595 109.25 97.625 109.25 L 30.375 109.25 C 25.144048 109.25 20.9375 105.04435 20.9375 99.8125 L 20.9375 50.96875 C 20.9375 45.736899 25.144048 41.5 30.375 41.5 z "
-       transform="translate(0,924.36218)"
-       id="rect3886" />
     <text
        sodipodi:linespacing="125%"
        id="text3900"
        y="893.14575"
        x="74.004463"
-       style="font-size:84.60752105999999628px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#eae3d1;fill-opacity:1;stroke:#eae3d1;font-family:Sans;stroke-opacity:1;stroke-width:2.00000004;stroke-miterlimit:4;stroke-dasharray:none"
+       style="font-size:84.60752105999999628px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#eae3d1;fill-opacity:1;stroke:#eae3d1;font-family:Sans;stroke-opacity:1;stroke-width:2.00000004000000020;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter2985)"
        xml:space="preserve"
        transform="scale(0.86681151,1.1536533)"><tspan
          style="font-size:78.71893310999998050px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;letter-spacing:-1.96797322999999991px;text-anchor:middle;fill:#eae3d1;fill-opacity:1;stroke:#eae3d1;stroke-width:2.00000004;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
@@ -72,5 +95,10 @@
          x="73.020477"
          id="tspan3902"
          sodipodi:role="line">۱۰</tspan></text>
+    <path
+       style="fill:#eae3d1;stroke:#000000;stroke-width:2.01431394000000008;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;fill-opacity:1"
+       d="M 19.15625 5 C 11.309822 5 5 11.339724 5 19.1875 L 5 108.8125 C 5 116.66028 11.309822 123 19.15625 123 L 108.84375 123 C 116.69018 123 123 116.66028 123 108.8125 L 123 19.1875 C 123 11.339724 116.69018 5 108.84375 5 L 19.15625 5 z M 25.65625 18.125 L 102.34375 18.125 C 104.95923 18.125 107.0625 20.227825 107.0625 22.84375 L 107.0625 24.34375 C 107.0625 26.959675 104.95923 29.0625 102.34375 29.0625 L 25.65625 29.0625 C 23.040774 29.0625 20.9375 26.959675 20.9375 24.34375 L 20.9375 22.84375 C 20.9375 20.227825 23.040774 18.125 25.65625 18.125 z M 30.375 41.5 L 97.625 41.5 C 102.85595 41.5 107.0625 45.736899 107.0625 50.96875 L 107.0625 99.8125 C 107.0625 105.04435 102.85595 109.25 97.625 109.25 L 30.375 109.25 C 25.144048 109.25 20.9375 105.04435 20.9375 99.8125 L 20.9375 50.96875 C 20.9375 45.736899 25.144048 41.5 30.375 41.5 z "
+       transform="translate(0,924.36218)"
+       id="rect3886" />
   </g>
 </svg>
