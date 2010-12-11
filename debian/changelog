@@ -1,9 +1,7 @@
-pcalendar (0.6.0-1) maverick; urgency=low
+pcalendar (0.7.0-1) maverick; urgency=low
 
-  * events added to preferences (Thanks to Mostafa Mirmousavi)
-  * Show notify added to rigt click menu (Thanks to Mostafa Mirmousavi)
-  * Interface changed
-  * year limited for all users because of 32bit OSes
-  * all fonts changed to "freefarsi"!
+  * change interface to Persian
+  * Show next norouz time on right menu
+  * add/complete Persian events
 
  -- omidmottaghi <omidmr@gmail.com>  Tue, 13 Jul 2010 21:57:02 +0430
