@@ -370,7 +370,8 @@ class Calendar
     private function createRightMenu()
     {
         $this->_rightmenu = new GtkMenu();
-
+        $this->_rightmenu->set_direction(2);
+        
         $showNotify = new GtkMenuItem('نمایش تاریخ');
         $showNorouzTime = new GtkMenuItem('لحظه تحویل سال نو');
         $preferences = new GtkMenuItem('تنظیمات');
@@ -390,7 +391,7 @@ class Calendar
         $this->_rightmenu->append($about);
         $this->_rightmenu->append(new GtkSeparatorMenuItem());
         $this->_rightmenu->append($quit);
-
+        
         $this->_rightmenu->show_all();
         GtkStatusIcon::position_menu($this->_rightmenu, $this->_tray);
     }
@@ -422,6 +423,7 @@ class Calendar
     {
         // 31556912 is length of each Persian year, according to ghiasabadi.com
         $start = persian_calendar::mktime(21, 2, 13, 12, 29, 1388);
+        $year = persian_calendar::date('Y', '', false) + 1;
         
         $delta = persian_calendar::date('Y', '', false) - 1389 + 1;
 
@@ -430,8 +432,7 @@ class Calendar
             $start = 0;
         }
         
-        $msg = 'لحظه تحویل سال ' . persian_calendar::persian_no(persian_calendar::date('Y', $start, false) + 1);
-        //$this->notify($msg . "\t\t\t" . persian_calendar::date('l d F Y ساعت H و i دقیقه و s ثانیه', $start));
+        $msg = 'لحظه تحویل سال ' . persian_calendar::persian_no($year);
         $this->notify($msg, persian_calendar::date('l d F Y ساعت H و i دقیقه و s ثانیه', $start));
     }
     
@@ -446,7 +447,7 @@ class Calendar
         $dlgAbout->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
         
         $dlgAbout->set_name('Persian Calendar');
-        $dlgAbout->set_version('0.6');
+        $dlgAbout->set_version('0.7');
          
         $dlgAbout->set_comments('Persian Calendar is a calendar for Persians.');
         $dlgAbout->set_copyright('GPL version 3');
@@ -484,7 +485,7 @@ class Calendar
     {
         $startup_file = $_SERVER['HOME'] . '/.config/autostart/pcalendar.desktop';
         
-        $dlgPreferences = new GtkDialog('Persian Calendar Preferences');
+        $dlgPreferences = new GtkDialog('تنظیمات Persian Calendar');
         $dlgPreferences->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
         $dlgPreferences->set_default_size(300,200);
         //$dlgPreferences->set_resizable(false);
@@ -492,14 +493,16 @@ class Calendar
         $dlgPreferences->set_skip_pager_hint(true);
         
         $notebook = new GtkNotebook();
+        $notebook->set_direction(2);
         $dlgPreferences->vbox->pack_start($notebook);
         
         //Page General
         $vboxGeneral = new GtkVBox();
-        $checkboxStartLogin = new GtkCheckButton('Start at login.');
+        $checkboxStartLogin = new GtkCheckButton('راه‌اندازی برنامه در زمان ورود');
+        $checkboxStartLogin->set_direction(2);
         
         $vboxGeneral->pack_start($checkboxStartLogin, false, false, 5);
-        $this->add_new_tab($notebook, $vboxGeneral, 'General');
+        $this->add_new_tab($notebook, $vboxGeneral, 'عمومی');
         
         $exists = false;
         if(file_exists($startup_file)){
@@ -514,10 +517,11 @@ class Calendar
         foreach($this->events as $key => $val)
         {
             $this->events[$key]['handle'] = new GtkCheckButton($val['name']);
+            $this->events[$key]['handle']->set_direction(2);
             $vboxEvents->pack_start($this->events[$key]['handle'], false, false, 5);
         }
         
-        $this->add_new_tab($notebook, $vboxEvents, 'Events');
+        $this->add_new_tab($notebook, $vboxEvents, 'مناسبت‌ها');
 
         // set config to checkboxes
         foreach($this->events as $key => $val)

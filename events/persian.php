@@ -5,7 +5,7 @@ $events_info['persian'] = array(
     'name' => 'مناسبت‌های پارسی',
 );
 
-$events[] = array (
+$p_events = array (
     
     // farvardin // +0
     array('day' => 1, 'title' => 'جشن نوروز', 'holiday' => false),
@@ -79,11 +79,34 @@ $events[] = array (
     array('day' => 365, 'title' => 'گاهنبار هَمَسپَتمَدَم، جشن پایان زمستان / زادروز زرتشت / جشن اوشیدر (نجات بخش ایرانی) در دریاچه هامون و کوه خواجه / آتش افروزی بر بام‌ها در استقبال از نوروز', 'holiday' => false),
 );
 
+if(!isset($year)){
+    $year = persian_calendar::date('Y', '', false);
+}
 
-// first wednesday of the year
-// جشن نخستین چهارشنبه سال
-// last tuesday of the year
-// چارشنبه سوری، جشن شب چهارشنبه آخر
-// last wednesday of the year
-// چارشنبه آخر
-//if(persian_calendar::date('N', $ts, false) == 7) $today['holiday'] = true;
+// find first wednesday of the year
+for($i=1; $i<=7; $i++){
+    $p_ts = persian_calendar::mktime(0, 0, 0, 1, $i, $year);
+    if(persian_calendar::date('N', $p_ts, false) == 4){
+        $first_wednesday_of_year = persian_calendar::date('z', $p_ts, false) + 1;
+        break;
+    }
+}
+
+// find last wednesday of the year
+$leap = persian_calendar::date('L');
+
+for($i=0; $i<7; $i++){
+    $p_ts = persian_calendar::mktime(0, 0, 0, 12, 29 + $leap - $i, $year);
+    if(persian_calendar::date('N', $p_ts, false) == 4){
+        $last_wednesday_of_year = persian_calendar::date('z', $p_ts, false) + 1;
+        break;
+    }
+}
+
+$p_events[] = array('day' => $first_wednesday_of_year, 'title' => 'جشن نخستین چهارشنبه سال', 'holiday' => false);
+$p_events[] = array('day' => $last_wednesday_of_year - 1, 'title' => 'چارشنبه سوری، جشن شب چهارشنبه آخر', 'holiday' => false);
+$p_events[] = array('day' => $last_wednesday_of_year, 'title' => 'چارشنبه آخر', 'holiday' => false);
+
+$events[] = $p_events;
+
+unset($p_events);
