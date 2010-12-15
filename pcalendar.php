@@ -209,7 +209,9 @@ class Calendar
         $l->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
         $l->set_use_markup(true);
         $l->set_padding(0,5);
-        $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
+        $frameL = new GtkFrame();
+        $frameL->add($l);
+        $this->_leftmenu->get_child()->pack_start($frameL, false, false, 0);
         $l->set_markup(persian_calendar::date('Y/m/d', $ts) . '               ' . date('Y/m/d', $ts));
         
         // fill days
