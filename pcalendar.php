@@ -434,17 +434,17 @@ class Calendar
         $mTo = 12 - persian_calendar::date('m', '', false);
         if($mTo >= 6)
         {
-			$dTo = 31 - persian_calendar::date('d', '', false);
-		}else
-		{
-			$dTo = 30 - persian_calendar::date('d', '', false);
-		}
+            $dTo = 31 - persian_calendar::date('d', '', false);
+	}else
+	{
+	    $dTo = 30 - persian_calendar::date('d', '', false);
+	}
         if($mTo != 0)
         {
-			$toNorouz = $mTo . ' ماه و ';
-		}
-		$toNorouz .= $dTo . ' روز مانده به ';
-		
+	    $toNorouz = $mTo . ' ماه و ';
+	}
+	$toNorouz .= $dTo . ' روز مانده به ';
+	
         $msg = $toNorouz . 'تحویل سال ' . persian_calendar::persian_no($year);
         $this->notify($msg, persian_calendar::date('l d F Y ساعت H و i دقیقه و s ثانیه', $start));
     }
