@@ -252,15 +252,12 @@ class Calendar
                     $l->set_use_markup(true);
                     $l->set_line_wrap(true);
                     $l->set_width_chars(32);
+                    $l->set_alignment(1,0);
                     $l->set_markup("<span color=\"{$color}\">" . $today['title'] . '</span>');
                     $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
                 }
             }
             $labelEvent->get_child()->set_markup(" <big><span color=\"{$color}\">".persian_calendar::persian_no($d) . '</span></big> <span color="darkgray"><small><small>'.date('j', persian_calendar::mktime(0,0,0,$month,$d,$year)).'</small></small></span> ');
-            
-            //$frameL = new GtkFrame();
-            //$frameL->set_shadow_type(Gtk::SHADOW_ETCHED_OUT);
-            //$frameL->add($labelEvent);
             
             $this->_table->attach($labelEvent, $days[$d]['x'], $days[$d]['x']+1, $days[$d]['y'], $days[$d]['y']+1, Gtk::FILL, Gtk::FILL, 0, 0);
             
