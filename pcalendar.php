@@ -14,6 +14,7 @@ class Calendar
     protected $_date;
     protected $_label;
     protected $events;
+    protected $icsCals = '';
     
     function __construct()
     {
@@ -256,6 +257,49 @@ class Calendar
                     $l->set_markup("<span color=\"{$color}\">" . $today['title'] . '</span>');
                     $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
                 }
+
+                //other calenders from ics
+                if($this->icsCals != '' && isset($this->calEvents))
+                {
+                    foreach($this->calEvents as $comp)
+                    {
+                        $dtstart_array = $comp->getProperty("dtstart", 1, TRUE);
+                        $dtstart = $dtstart_array["value"];
+                        $startDate = $dtstart["year"] . $dtstart["month"] . $dtstart["day"];
+                        if ($startDate == date('Ymd', $ts))
+                        {
+                            $summary = $comp->getProperty("summary", 1, TRUE);
+                            $summary = trim($summary['value']);
+                            $location = $comp->getProperty("location", 1, TRUE);
+                            $location = trim($location['value']);
+                            
+                            //$startTime = $dtstart["hour"] . ':' .$dtstart["min"];
+                            
+                            //$dtend_array = $comp->getProperty("dtend", 1, TRUE);
+                            //$dtend = $dtend_array["value"];
+                            //$endTime = $dtend["hour"] . ':' . $dtend["min"];
+                            
+                            //$strCals = "<span color=\"#19195E\">{$startTime} > {$endTime}: {$summary}";
+                            //$strCals = "<span color=\"#19195E\">{$startTime} > {$summary}";
+                            $strCals = "<span color=\"#19195E\">{$summary}";
+                            if($location != '')
+                            {
+                                $strCals .= " ({$location})";
+                            }
+                            $strCals .="</span>";
+                            
+                            $l = new GtkLabel();
+                            $l->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
+                            $l->set_use_markup(true);
+                            $l->set_line_wrap(true);
+                            $l->set_alignment(1,0);
+                            $l->set_width_chars(32);
+                            $l->set_markup($strCals);
+                            $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
+                        }
+                    }
+                }
+                
             }
             $labelEvent->get_child()->set_markup(" <big><span color=\"{$color}\">".persian_calendar::persian_no($d) . '</span></big> <span color="darkgray"><small><small>'.date('j', persian_calendar::mktime(0,0,0,$month,$d,$year)).'</small></small></span> ');
             
@@ -373,12 +417,18 @@ class Calendar
         
         $showNotify = new GtkMenuItem('نمایش تاریخ');
         $showNorouzTime = new GtkMenuItem('لحظه تحویل سال نو');
+        $sync = new GtkMenuItem('هماهنگ سازی با تقویم‌های دیگر');
+        //$sync->activate(false);
         $preferences = new GtkMenuItem('تنظیمات');
         $about = new GtkMenuItem('درباره');
         $quit = new GtkMenuItem('خروج');
         
         $showNotify->connect('activate', array($this, 'onShowNotify'));
         $showNorouzTime->connect('activate', array($this, 'onShowNorouzTime'));
+        if($this->icsCals != '')
+        {
+            $sync->connect('activate', array($this, 'onSync'));
+        }
         $preferences->connect('activate', array($this, 'onPreferences'));
         $about->connect('activate', array($this, 'onAbout'));
         $quit->connect('activate', array($this, 'onQuit'));
@@ -386,6 +436,7 @@ class Calendar
         $this->_rightmenu->append($showNotify);
         $this->_rightmenu->append($showNorouzTime);
         $this->_rightmenu->append(new GtkSeparatorMenuItem());
+        $this->_rightmenu->append($sync);
         $this->_rightmenu->append($preferences);
         $this->_rightmenu->append($about);
         $this->_rightmenu->append(new GtkSeparatorMenuItem());
@@ -494,6 +545,20 @@ class Calendar
         @unlink('/tmp/today.svg');
     }
 
+    public function onSync()
+    {
+        $v = new vcalendar();
+        
+        echo ('Start a Sync'); //send notify
+        $v->parse($this->icsCals);
+        echo ('End a Sync'); //send notify
+        
+        while($comp = $v->getComponent("VEVENT"))
+        {   
+            $this->calEvents[] = $comp;
+        }
+    }
+
     public function onPreferences()
     {
         $startup_file = $_SERVER['HOME'] . '/.config/autostart/pcalendar.desktop';
@@ -546,6 +611,22 @@ class Calendar
         }
         //End events page
         
+        // start sync page
+        $vboxSync = new GtkVBox();
+        
+        $title = new GtkLabel('دریافت و نمایش از تقویم‌های دیگر:');
+        $vboxSync->pack_start($title, 0, 0);
+        
+        $icsCalsEntry = new GtkEntry('');
+        $icsCalsEntry->set_text($this->icsCals);
+        
+        $img = GtkImage::new_from_file('googlecalendar.jpg');
+        
+        $vboxSync->pack_start($icsCalsEntry, 0, 0);  
+        $vboxSync->pack_start($img, 0, 0);  
+        $this->add_new_tab($notebook, $vboxSync, 'ارتباطات');
+        //End sync page
+        
         //Start Window
         $dlgPreferences->add_buttons(array(
             Gtk::STOCK_CANCEL, Gtk::RESPONSE_CANCEL,
@@ -554,6 +635,9 @@ class Calendar
         
         $dlgPreferences->show_all();
         $response_id = $dlgPreferences->run();
+        
+        $icsCalsTMP = $icsCalsEntry->get_text();
+        
         $dlgPreferences->destroy();
         //Stop Window
         
@@ -585,6 +669,21 @@ class Calendar
             }
             $this->saveConfig();
             //End process of Events tab
+            
+            //process of sync tab
+            if($icsCalsTMP != $this->icsCals)
+            {
+                $syncConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/sync.conf';
+                if(!file_exists($syncConfigFile))
+                {
+                    @mkdir($_SERVER['HOME'] . '/.config/pcalendar/');
+                    touch($syncConfigFile);
+                }
+                file_put_contents($syncConfigFile, json_encode($icsCalsTMP));
+                $this->icsCals = $icsCalsTMP;
+            }
+            //End process of sync tab
+            
         }
         //End process of Preferences
     }
@@ -621,6 +720,18 @@ class Calendar
                 }
             }
         }
+        
+        $syncConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/sync.conf';        
+        if(file_exists($syncConfigFile)){
+            $this->icsCals = json_decode(file_get_contents($syncConfigFile));
+            
+            if($this->icsCals != '')
+            {
+                require_once('/usr/share/pcalendar/iCalcreator.class.php');
+                //$this->onSync();
+            }
+        }
+        
     }
 
     private function saveConfig()
