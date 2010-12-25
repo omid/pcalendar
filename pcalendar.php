@@ -547,17 +547,20 @@ class Calendar
 
     public function onSync()
     {
+        $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'در حال انجام هماهنگ سازی با تقویم‌های دیگر');
+        
         unset($this->calEvents);
         $v = new vcalendar();
         
-        $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'در حال انجام هماهنگ سازی با تقویم‌های دیگر');
-        $v->parse($this->icsCals);
+        foreach($this->icsCals as $icsCal)
+        {
+            $v->parse($icsCal);
         
-        while($comp = $v->getComponent("VEVENT"))
-        {   
-            $this->calEvents[] = $comp;
+            while($comp = $v->getComponent("VEVENT"))
+            {   
+                $this->calEvents[] = $comp;
+            }
         }
-        
         if(isset($this->calEvents))
         {
             $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هماهنگ سازی با موفقیت انجام شد');            
@@ -623,15 +626,18 @@ class Calendar
         // start sync page
         $vboxSync = new GtkVBox();
         
-        $title = new GtkLabel('دریافت و نمایش از تقویم‌های دیگر:');
-        $vboxSync->pack_start($title, 0, 0);
+        $vboxSync->pack_start(new GtkLabel('دریافت و نمایش از تقویم‌های دیگر:'), 0, 0);
         
         $icsCalsEntry = new GtkEntry('');
-        $icsCalsEntry->set_text($this->icsCals);
+        $icsCalsEntry->set_text(implode(", ", $this->icsCals));
         
         $img = GtkImage::new_from_file('/usr/share/pcalendar/pix/googlecalendar.jpg');
         
-        $vboxSync->pack_start($icsCalsEntry, 0, 0);  
+        $vboxSync->pack_start($icsCalsEntry, 0, 0);
+        
+        $vboxSync->pack_start(new GtkLabel('شما می‌توانید آدرس تقویم‌های ICAL را برای نمایش رویداد‌های آن در کادر بالا بنویسید.'), 0, 0);
+        $vboxSync->pack_start(new GtkLabel('برای استفاده از چند تقویم می‌توانید با کاما (,) تقویم‌ها را از هم جدا نمایید.'), 0, 0);
+        
         $vboxSync->pack_start($img, 0, 0);  
         $this->add_new_tab($notebook, $vboxSync, 'ارتباطات');
         //End sync page
@@ -680,7 +686,7 @@ class Calendar
             //End process of Events tab
             
             //process of sync tab
-            if($icsCalsTMP != $this->icsCals)
+            if($icsCalsTMP != implode(", ", $this->icsCals))
             {
                 $syncConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/sync.conf';
                 if(!file_exists($syncConfigFile))
@@ -688,6 +694,14 @@ class Calendar
                     @mkdir($_SERVER['HOME'] . '/.config/pcalendar/');
                     touch($syncConfigFile);
                 }
+                
+                $icsCalsTMP = explode(',', $icsCalsTMP);
+                foreach($icsCalsTMP as $tmp)
+                {
+                    $tmps[] = trim($tmp);
+                }
+                $icsCalsTMP = $tmps;
+                
                 file_put_contents($syncConfigFile, json_encode($icsCalsTMP));
                 $this->icsCals = $icsCalsTMP;
             }
@@ -734,7 +748,7 @@ class Calendar
         if(file_exists($syncConfigFile)){
             $this->icsCals = json_decode(file_get_contents($syncConfigFile));
             
-            if($this->icsCals != '')
+            if(is_array($this->icsCals))
             {
                 require_once('/usr/share/pcalendar/iCalcreator.class.php');
                 //$this->onSync();
