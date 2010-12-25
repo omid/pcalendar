@@ -621,7 +621,7 @@ class Calendar
         $icsCalsEntry = new GtkEntry('');
         $icsCalsEntry->set_text($this->icsCals);
         
-        $img = GtkImage::new_from_file('googlecalendar.jpg');
+        $img = GtkImage::new_from_file('/usr/share/pcalendar/pix/googlecalendar.jpg');
         
         $vboxSync->pack_start($icsCalsEntry, 0, 0);  
         $vboxSync->pack_start($img, 0, 0);  
