@@ -550,14 +550,22 @@ class Calendar
         unset($this->calEvents);
         $v = new vcalendar();
         
-        $this->notify('هماهنگ سازی', 'در حال انجام هماهنگ سازی با تقویم‌های دیگر');
+        $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'در حال انجام هماهنگ سازی با تقویم‌های دیگر');
         $v->parse($this->icsCals);
-        $this->notify('هماهنگ سازی', 'هماهنگ سازی با تقویم‌های دیگر انجام شد');
         
         while($comp = $v->getComponent("VEVENT"))
         {   
             $this->calEvents[] = $comp;
         }
+        
+        if(isset($this->calEvents))
+        {
+            $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هماهنگ سازی با موفقیت انجام شد');            
+        }else
+        {
+            $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'متاسفانه هماهنگ سازی انجام نشد');            
+        }
+        
     }
 
     public function onPreferences()
