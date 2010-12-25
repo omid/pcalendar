@@ -547,6 +547,7 @@ class Calendar
 
     public function onSync()
     {
+        unset($this->calEvents);
         $v = new vcalendar();
         
         echo ('Start a Sync'); //send notify
