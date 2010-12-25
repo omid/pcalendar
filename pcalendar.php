@@ -550,9 +550,9 @@ class Calendar
         unset($this->calEvents);
         $v = new vcalendar();
         
-        echo ('Start a Sync'); //send notify
+        $this->notify('هماهنگ سازی', 'در حال انجام هماهنگ سازی با تقویم‌های دیگر');
         $v->parse($this->icsCals);
-        echo ('End a Sync'); //send notify
+        $this->notify('هماهنگ سازی', 'هماهنگ سازی با تقویم‌های دیگر انجام شد');
         
         while($comp = $v->getComponent("VEVENT"))
         {   
