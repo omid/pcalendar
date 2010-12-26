@@ -229,7 +229,10 @@ class vcalendar {
 
  */
   function _makeUnique_id() {
-    $this->unique_id  = gethostbyname( $_SERVER['HOME'] );
+	 //in khat error  dash
+    //$this->unique_id  = gethostbyname( $_SERVER['HOME'] );
+    $this->unique_id  = gethostbyname( $_SERVER['HOME']  . '/.config/pcalendar/' );
+    
   }
 /*********************************************************************************/
 /**
@@ -5756,7 +5759,7 @@ class calendarComponent {
         break;
       case 'UNIQUE_ID':
         if( empty( $this->unique_id ))
-          $this->unique_id  = gethostbyname( $_SERVER['HOME'] );
+          $this->unique_id  = gethostbyname( $_SERVER['HOME']  . '/.config/pcalendar/' );
         return $this->unique_id;
         break;
     }
