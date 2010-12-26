@@ -14,7 +14,7 @@ class Calendar
     protected $_date;
     protected $_label;
     protected $events;
-    protected $icsCals = '';
+    protected $icsCals;
     
     function __construct()
     {
@@ -418,17 +418,17 @@ class Calendar
         $showNotify = new GtkMenuItem('نمایش تاریخ');
         $showNorouzTime = new GtkMenuItem('لحظه تحویل سال نو');
         $sync = new GtkMenuItem('هماهنگ سازی با تقویم‌های دیگر');
-        //$sync->activate(false);
         $preferences = new GtkMenuItem('تنظیمات');
         $about = new GtkMenuItem('درباره');
         $quit = new GtkMenuItem('خروج');
         
         $showNotify->connect('activate', array($this, 'onShowNotify'));
         $showNorouzTime->connect('activate', array($this, 'onShowNorouzTime'));
-        if($this->icsCals != '')
-        {
-            $sync->connect('activate', array($this, 'onSync'));
-        }
+        //if($this->icsCals != '')
+        //{
+        //    $sync->connect('activate', array($this, 'onSync'));
+        //}
+        $sync->connect('activate', array($this, 'onSync'));
         $preferences->connect('activate', array($this, 'onPreferences'));
         $about->connect('activate', array($this, 'onAbout'));
         $quit->connect('activate', array($this, 'onQuit'));
@@ -547,28 +547,32 @@ class Calendar
 
     public function onSync()
     {
-        $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'در حال انجام هماهنگ سازی با تقویم‌های دیگر');
-        
-        unset($this->calEvents);
-        $v = new vcalendar();
-        
-        foreach($this->icsCals as $icsCal)
+        if(is_array($this->icsCals))
         {
-            $v->parse($icsCal);
-        
-            while($comp = $v->getComponent("VEVENT"))
-            {   
-                $this->calEvents[] = $comp;
+            $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'در حال انجام هماهنگ سازی با تقویم‌های دیگر');
+            
+            unset($this->calEvents);
+            $v = new vcalendar();
+            
+            foreach($this->icsCals as $icsCal)
+            {
+                $v->parse($icsCal);
+            
+                while($comp = $v->getComponent("VEVENT"))
+                {   
+                    $this->calEvents[] = $comp;
+                }
             }
+            if(isset($this->calEvents))
+            {
+                $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هماهنگ سازی با موفقیت انجام شد');            
+            }else
+            {
+                $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'متاسفانه هماهنگ سازی انجام نشد. در اتصال به تقویم‌های دیگر مشکلی وجود دارد.');            
+            }
+        }else{
+            $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هیچ تقویمی وارد نشده است. لطفن برای وارد نمودن تقویم از قسمت تنظیمات استفاده نمایید.');            
         }
-        if(isset($this->calEvents))
-        {
-            $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هماهنگ سازی با موفقیت انجام شد');            
-        }else
-        {
-            $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'متاسفانه هماهنگ سازی انجام نشد');            
-        }
-        
     }
 
     public function onPreferences()
@@ -626,18 +630,27 @@ class Calendar
         // start sync page
         $vboxSync = new GtkVBox();
         
-        $vboxSync->pack_start(new GtkLabel('دریافت و نمایش از تقویم‌های دیگر:'), 0, 0);
+        $icsCalsBuffer = new GtkTextBuffer();
+        if(is_array($this->icsCals))
+        {
+            $icsCalsBuffer->set_text(implode("\n", $this->icsCals));            
+        }
         
-        $icsCalsEntry = new GtkEntry('');
-        $icsCalsEntry->set_text(implode(", ", $this->icsCals));
+        $view = new GtkTextView();
+        $view->set_buffer($icsCalsBuffer);
+        $view->set_wrap_mode(Gtk::WRAP_WORD);
         
+        $scrolled_win = new GtkScrolledWindow();
+        $scrolled_win->set_policy( Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+        $scrolled_win->add($view);
+
         $img = GtkImage::new_from_file('/usr/share/pcalendar/pix/googlecalendar.jpg');
         
-        $vboxSync->pack_start($icsCalsEntry, 0, 0);
-        
+        $vboxSync->pack_start(new GtkLabel('دریافت و نمایش از تقویم‌های دیگر:'), 0, 0);
+        $vboxSync->pack_start($scrolled_win, 0, 0);
         $vboxSync->pack_start(new GtkLabel('شما می‌توانید آدرس تقویم‌های ICAL را برای نمایش رویداد‌های آن در کادر بالا بنویسید.'), 0, 0);
-        $vboxSync->pack_start(new GtkLabel('برای استفاده از چند تقویم می‌توانید با کاما (,) تقویم‌ها را از هم جدا نمایید.'), 0, 0);
-        
+        $vboxSync->pack_start(new GtkLabel('همچنین می‌توانید از چند تقویم به طور همزمان استفاده نمایید.'), 0, 0);
+        $vboxSync->pack_start(new GtkLabel('لطفن برای جدا نمودن تقویم‌ها از Enter استفاده نمایید.'), 0, 0);
         $vboxSync->pack_start($img, 0, 0);  
         $this->add_new_tab($notebook, $vboxSync, 'ارتباطات');
         //End sync page
@@ -650,10 +663,6 @@ class Calendar
         
         $dlgPreferences->show_all();
         $response_id = $dlgPreferences->run();
-        
-        $icsCalsTMP = $icsCalsEntry->get_text();
-        
-        $dlgPreferences->destroy();
         //Stop Window
         
         //process of Preferences
@@ -686,36 +695,43 @@ class Calendar
             //End process of Events tab
             
             //process of sync tab
-            if($icsCalsTMP != implode(", ", $this->icsCals))
+            $syncConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/sync.conf';
+            
+            $icsCalsText = $icsCalsBuffer->get_text(
+                                             $icsCalsBuffer->get_start_iter(),
+                                             $icsCalsBuffer->get_end_iter());
+            
+            
+            if($icsCalsText != '')
             {
-                $syncConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/sync.conf';
-                if(!file_exists($syncConfigFile))
+                foreach(explode("\n", $icsCalsText) as $line)
                 {
-                    @mkdir($_SERVER['HOME'] . '/.config/pcalendar/');
-                    touch($syncConfigFile);
+                    $cal[] = trim($line);
                 }
-                
-                $icsCalsTMP = explode(',', $icsCalsTMP);
-                foreach($icsCalsTMP as $tmp)
+                if(is_array($cal))
                 {
-                    $tmps[] = trim($tmp);
+                    $this->icsCals = $cal;                    
                 }
-                $icsCalsTMP = $tmps;
-                
-                file_put_contents($syncConfigFile, json_encode($icsCalsTMP));
-                $this->icsCals = $icsCalsTMP;
+                file_put_contents($syncConfigFile, json_encode($this->icsCals));
+            }else
+            {
+                $this->icsCals = array();
+                file_put_contents($syncConfigFile, json_encode(''));
             }
             //End process of sync tab
-            
+
         }
         //End process of Preferences
+        
+        $dlgPreferences->destroy();
     }
 
     private function loadConfig()
     {
         $eventsConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/events.conf';
+        $syncConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/sync.conf';
 
-        if(!file_exists($eventsConfigFile)){
+        if(!file_exists($eventsConfigFile) || !file_exists($syncConfigFile)){
             $this->saveConfig();
         }
         
@@ -759,6 +775,7 @@ class Calendar
 
     private function saveConfig()
     {
+        //events config
         $eventsConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/events.conf';
         
         if(!file_exists($eventsConfigFile))
@@ -776,9 +793,17 @@ class Calendar
             }
         }
         file_put_contents($eventsConfigFile, json_encode($eventsTMP));
+        
+        //sync config
+        $syncConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/sync.conf';
+        
+        if(!file_exists($syncConfigFile))
+        {
+            @mkdir($_SERVER['HOME'] . '/.config/pcalendar/');
+            touch($syncConfigFile);
+        }
     }
     
-    //Add new tab
     public function add_new_tab($notebook, $widget, $tab_label) {
         $eventbox = new GtkEventBox();
         $label = new GtkLabel($tab_label);
