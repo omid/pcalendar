@@ -642,15 +642,16 @@ class Calendar
         $scrolled_win = new GtkScrolledWindow();
         $scrolled_win->set_policy( Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
         $scrolled_win->add($view);
-
-        $img = GtkImage::new_from_file('/usr/share/pcalendar/pix/googlecalendar.jpg');
         
+        $btnGoogleHelp = new GtkButton('نمایش عکس نمونه لینک خروجی گوگل کلندر');
+        $btnGoogleHelp->connect('clicked', array($this, 'onGoogleCalendarHelp'));
+
         $vboxSync->pack_start(new GtkLabel('دریافت و نمایش از تقویم‌های دیگر:'), 0, 0);
         $vboxSync->pack_start($scrolled_win, 0, 0);
         $vboxSync->pack_start(new GtkLabel('شما می‌توانید آدرس تقویم‌های ICAL را برای نمایش رویداد‌های آن در کادر بالا بنویسید.'), 0, 0);
         $vboxSync->pack_start(new GtkLabel('همچنین می‌توانید از چند تقویم به طور همزمان استفاده نمایید.'), 0, 0);
         $vboxSync->pack_start(new GtkLabel('لطفن برای جدا نمودن تقویم‌ها از Enter استفاده نمایید.'), 0, 0);
-        $vboxSync->pack_start($img, 0, 0);  
+        $vboxSync->pack_start($btnGoogleHelp, 0, 0);
         $this->add_new_tab($notebook, $vboxSync, 'ارتباطات');
         //End sync page
         
@@ -724,7 +725,23 @@ class Calendar
         
         $dlgPreferences->destroy();
     }
+    
+    public function onGoogleCalendarHelp()
+    {
+        $dlgGoogleCalendarHelp = new GtkDialog('تصویر راهنما گوگل کلندر');
+        $dlgGoogleCalendarHelp->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
+        $dlgGoogleCalendarHelp->set_resizable(false);
+        $dlgGoogleCalendarHelp->set_modal(true);
+        $dlgGoogleCalendarHelp->set_skip_pager_hint(true);
 
+        $img = GtkImage::new_from_file('/usr/share/pcalendar/pix/googlecalendar.jpg');
+
+        $dlgGoogleCalendarHelp->vbox->pack_start($img);
+        
+        $dlgGoogleCalendarHelp->show_all();
+        //$dlgPreferences->destroy();
+    }
+    
     private function loadConfig()
     {
         $eventsConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/events.conf';
