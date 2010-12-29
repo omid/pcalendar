@@ -638,7 +638,6 @@ class Calendar
         
         $view = new GtkTextView();
         $view->set_buffer($icsCalsBuffer);
-        $view->set_wrap_mode(Gtk::WRAP_WORD);
         
         $scrolled_win = new GtkScrolledWindow();
         $scrolled_win->set_policy( Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
