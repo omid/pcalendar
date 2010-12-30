@@ -261,41 +261,40 @@ class Calendar
                 //other calenders from ics
                 if($this->icsCals != '' && isset($this->calEvents))
                 {
-                    foreach($this->calEvents as $comp)
+                    foreach($this->calEvents as $calEvent)
                     {
-                        $dtstart_array = $comp->getProperty("dtstart", 1, TRUE);
-                        $dtstart = $dtstart_array["value"];
-                        $startDate = $dtstart["year"] . $dtstart["month"] . $dtstart["day"];
-                        if ($startDate == date('Ymd', $ts))
+                        //echo ($calEvent);
+                        //echo '------------------';
+                        if(preg_match('/DTSTART.*?:(\d{8})T(\d{4})?/', $calEvent, $eventStart))
                         {
-                            $summary = $comp->getProperty("summary", 1, TRUE);
-                            $summary = trim($summary['value']);
-                            $location = $comp->getProperty("location", 1, TRUE);
-                            $location = trim($location['value']);
-                            
-                            //$startTime = $dtstart["hour"] . ':' .$dtstart["min"];
-                            
-                            //$dtend_array = $comp->getProperty("dtend", 1, TRUE);
-                            //$dtend = $dtend_array["value"];
-                            //$endTime = $dtend["hour"] . ':' . $dtend["min"];
-                            
-                            //$strCals = "<span color=\"#19195E\">{$startTime} > {$endTime}: {$summary}";
-                            //$strCals = "<span color=\"#19195E\">{$startTime} > {$summary}";
-                            $strCals = "<span color=\"#19195E\">{$summary}";
-                            if($location != '')
+                            if ($eventStart[1] == date('Ymd', $ts))
                             {
-                                $strCals .= " ({$location})";
+                                $startTime = $eventStart[2];
+                                $summary = trim($this->SelectPregMatch('/SUMMARY:(.*)/', $calEvent));
+                                $description = trim($this->SelectPregMatch('/DESCRIPTION:(.*)/', $calEvent));
+                                $location = trim($this->SelectPregMatch('/LOCATION:(.*)/', $calEvent));
+
+                                //$strCals = "<span color=\"#19195E\">{$startTime} > {$summary}";
+                                $strCals = "<span color=\"#19195E\">{$summary}";
+                                if($location != '')
+                                {
+                                    $strCals .= " ({$location})";
+                                }
+                                if($description != '')
+                                {
+                                    $strCals .= ": $description";
+                                }
+                                $strCals .="</span>";
+                                
+                                $l = new GtkLabel();
+                                $l->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
+                                $l->set_use_markup(true);
+                                $l->set_line_wrap(true);
+                                $l->set_alignment(1,0);
+                                $l->set_width_chars(32);
+                                $l->set_markup($strCals);
+                                $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
                             }
-                            $strCals .="</span>";
-                            
-                            $l = new GtkLabel();
-                            $l->modify_font(new PangoFontDescription('FreeFarsi Regular 10'));
-                            $l->set_use_markup(true);
-                            $l->set_line_wrap(true);
-                            $l->set_alignment(1,0);
-                            $l->set_width_chars(32);
-                            $l->set_markup($strCals);
-                            $this->_leftmenu->get_child()->pack_start($l, false, false, 0);
                         }
                     }
                 }
@@ -325,6 +324,12 @@ class Calendar
         $this->_leftmenu->show_all();
     }
 
+    private function SelectPregMatch($pattern, $input)
+    {
+        preg_match($pattern, $input, $matches);
+        return $matches[1];
+    }
+    
     public function goTodayInCalendar()
     {
         $this->year = persian_calendar::date('Y', '', false);
@@ -544,7 +549,7 @@ class Calendar
 
         @unlink('/tmp/today.svg');
     }
-
+    
     public function onSync()
     {
         if(is_array($this->icsCals))
@@ -552,17 +557,24 @@ class Calendar
             $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'در حال انجام هماهنگ سازی با تقویم‌های دیگر');
             
             unset($this->calEvents);
-            $v = new vcalendar();
             
             foreach($this->icsCals as $icsCal)
             {
-                $v->parse($icsCal);
-            
-                while($comp = $v->getComponent("VEVENT"))
-                {   
-                    $this->calEvents[] = $comp;
+                $icsCalBuffer = @file_get_contents($icsCal);
+                //explode events from evolution calendar
+                $icsCalBuffer = preg_split("/(BEGIN:VEVENT)/", $icsCalBuffer);
+                ////remove other information frome evolution buffer
+                //$icsCalBuffer = array_slice($icsCalBuffer, 1);
+                
+                if(isset($this->calEvents))
+                {
+                    $this->calEvents = array_merge($this->calEvents, $icsCalBuffer);
+                }else
+                {
+                    $this->calEvents = $icsCalBuffer;
                 }
             }
+            
             if(isset($this->calEvents))
             {
                 $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هماهنگ سازی با موفقیت انجام شد');            
@@ -574,7 +586,7 @@ class Calendar
             $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هیچ تقویمی وارد نشده است. لطفن برای وارد نمودن تقویم از قسمت تنظیمات استفاده نمایید.');            
         }
     }
-
+    
     public function onPreferences()
     {
         $startup_file = $_SERVER['HOME'] . '/.config/autostart/pcalendar.desktop';
@@ -782,7 +794,6 @@ class Calendar
             
             if(is_array($this->icsCals))
             {
-                require_once('/usr/share/pcalendar/iCalcreator.class.php');
                 //$this->onSync();
             }
         }
@@ -820,7 +831,8 @@ class Calendar
         }
     }
     
-    public function add_new_tab($notebook, $widget, $tab_label) {
+    public function add_new_tab($notebook, $widget, $tab_label)
+    {
         $eventbox = new GtkEventBox();
         $label = new GtkLabel($tab_label);
         $eventbox->add($label);
