@@ -29,6 +29,8 @@ class Calendar
         
         Gtk::timeout_add(300000 /* five minutes */, array($this, 'onDayChange'));
         
+        Gtk::timeout_add(300000 /* five minutes */, array($this, 'onSync'));
+        
         Gtk::main();
     }
 
@@ -434,10 +436,6 @@ class Calendar
         
         $showNotify->connect('activate', array($this, 'onShowNotify'));
         $showNorouzTime->connect('activate', array($this, 'onShowNorouzTime'));
-        //if($this->icsCals != '')
-        //{
-        //    $sync->connect('activate', array($this, 'onSync'));
-        //}
         $sync->connect('activate', array($this, 'onSync'));
         $preferences->connect('activate', array($this, 'onPreferences'));
         $about->connect('activate', array($this, 'onAbout'));
