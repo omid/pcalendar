@@ -559,27 +559,40 @@ class Calendar
     {
         if(is_array($this->icsCals))
         {
-            $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'در حال انجام هماهنگ سازی با تقویم‌های دیگر');
-            
-            unset($this->calEvents);
+            $icsCalCacheFile = $_SERVER['HOME'] . '/.config/pcalendar/cache.ics';
+            @unlink($icsCalCacheFile);
+            @mkdir($_SERVER['HOME'] . '/.config/pcalendar/');
+            touch($icsCalCacheFile);
+            $fp = fopen($icsCalCacheFile, 'a');
             
             foreach($this->icsCals as $icsCal)
             {
-                $icsCalBuffer = @file_get_contents($icsCal);
-                //explode events from evolution calendar
-                $icsCalBuffer = preg_split("/(BEGIN:VEVENT)/", $icsCalBuffer);
-                ////remove other information frome evolution buffer
-                //$icsCalBuffer = array_slice($icsCalBuffer, 1);
-                
-                if(isset($this->calEvents))
-                {
-                    $this->calEvents = array_merge($this->calEvents, $icsCalBuffer);
-                }else
-                {
-                    $this->calEvents = $icsCalBuffer;
-                }
-            }
+                fwrite($fp, @file_get_contents($icsCal));
+            }            
+            fclose($fp);
             
+            $this->loadSyncCache(true);
+        }
+        else{
+            $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هیچ تقویمی وارد نشده است. لطفن برای وارد نمودن تقویم از قسمت تنظیمات استفاده نمایید.');            
+        }
+    }
+    
+    private function loadSyncCache($msg = false)
+    {
+        $icsCalCacheFile = $_SERVER['HOME'] . '/.config/pcalendar/cache.ics';
+        $icsCalBuffer = @file_get_contents($icsCalCacheFile);
+        
+        if(isset($icsCalBuffer))
+        {
+            unset($this->calEvents);
+            
+            $icsCalBuffer = preg_split("/(BEGIN:VEVENT)/", $icsCalBuffer);
+            $this->calEvents = $icsCalBuffer;
+        }
+        
+        if($msg)
+        {
             if(isset($this->calEvents))
             {
                 $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هماهنگ سازی با موفقیت انجام شد');            
@@ -587,8 +600,6 @@ class Calendar
             {
                 $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'متاسفانه هماهنگ سازی انجام نشد. در اتصال به تقویم‌های دیگر مشکلی وجود دارد.');            
             }
-        }else{
-            $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هیچ تقویمی وارد نشده است. لطفن برای وارد نمودن تقویم از قسمت تنظیمات استفاده نمایید.');            
         }
     }
     
@@ -799,7 +810,7 @@ class Calendar
             
             if(is_array($this->icsCals))
             {
-                //$this->onSync();
+                $this->loadSyncCache(false);
             }
         }
         
