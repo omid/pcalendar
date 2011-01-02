@@ -263,13 +263,11 @@ class Calendar
                 {
                     foreach($this->calEvents as $calEvent)
                     {
-                        //echo ($calEvent);
-                        //echo '------------------';
-                        if(preg_match('/DTSTART.*?:(\d{8})T(\d{4})?/', $calEvent, $eventStart))
+                        if(preg_match('/DTSTART.*?:(\d{8})?/', $calEvent, $eventStart))
                         {
                             if ($eventStart[1] == date('Ymd', $ts))
                             {
-                                $startTime = $eventStart[2];
+                                $startTime = trim($this->SelectPregMatch('/DTSTART.*?T(\d{4})?/', $calEvent));
                                 $summary = trim($this->SelectPregMatch('/SUMMARY:(.*)/', $calEvent));
                                 $description = trim($this->SelectPregMatch('/DESCRIPTION:(.*)/', $calEvent));
                                 $location = trim($this->SelectPregMatch('/LOCATION:(.*)/', $calEvent));
@@ -327,7 +325,14 @@ class Calendar
     private function SelectPregMatch($pattern, $input)
     {
         preg_match($pattern, $input, $matches);
-        return $matches[1];
+        if(isset($matches[1]))
+        {
+            return $matches[1];
+        }else
+        {
+            //return null;
+            return '';
+        }
     }
     
     public function goTodayInCalendar()
