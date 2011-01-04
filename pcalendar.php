@@ -574,6 +574,7 @@ class Calendar
         else{
             $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هیچ تقویمی وارد نشده است. لطفن برای وارد نمودن تقویم از قسمت تنظیمات استفاده نمایید.');            
         }
+        return true;
     }
     
     private function loadSyncCache($msg = false)
