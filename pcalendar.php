@@ -569,7 +569,8 @@ class Calendar
             }            
             fclose($fp);
             
-            $this->loadSyncCache(true);
+            //$this->loadSyncCache(true);
+            $this->loadSyncCache();
         }
         else{
             $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هیچ تقویمی وارد نشده است. لطفن برای وارد نمودن تقویم از قسمت تنظیمات استفاده نمایید.');            
@@ -577,7 +578,8 @@ class Calendar
         return true;
     }
     
-    private function loadSyncCache($msg = false)
+    //private function loadSyncCache($msg = false)
+    private function loadSyncCache()
     {
         $icsCalCacheFile = $_SERVER['HOME'] . '/.config/pcalendar/cache.ics';
         $icsCalBuffer = @file_get_contents($icsCalCacheFile);
@@ -590,6 +592,7 @@ class Calendar
             $this->calEvents = $icsCalBuffer;
         }
         
+        /*
         if($msg)
         {
             if(isset($this->calEvents))
@@ -600,6 +603,7 @@ class Calendar
                 $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'متاسفانه هماهنگ سازی انجام نشد. در اتصال به تقویم‌های دیگر مشکلی وجود دارد.');            
             }
         }
+        */ 
     }
     
     public function onPreferences()
@@ -809,7 +813,8 @@ class Calendar
             
             if(is_array($this->icsCals))
             {
-                $this->loadSyncCache(false);
+                //$this->loadSyncCache(false);
+                $this->loadSyncCache();
             }
         }
         
