@@ -556,18 +556,28 @@ class Calendar
     public function onSync()
     {
         if(is_array($this->icsCals))
-        {
-            $icsCalCacheFile = $_SERVER['HOME'] . '/.config/pcalendar/cache.ics';
-            @unlink($icsCalCacheFile);
-            @mkdir($_SERVER['HOME'] . '/.config/pcalendar/');
-            touch($icsCalCacheFile);
-            $fp = fopen($icsCalCacheFile, 'a');
-            
+        {            
+            $syncRead = false;
+            $fpTmp = '';
             foreach($this->icsCals as $icsCal)
             {
-                fwrite($fp, @file_get_contents($icsCal));
+                if($fpTmp .= @file_get_contents($icsCal))
+                {
+                  $syncRead = true;
+                }
             }            
-            fclose($fp);
+            
+            if($syncRead)
+            {
+                $icsCalCacheFile = $_SERVER['HOME'] . '/.config/pcalendar/cache.ics';
+                @unlink($icsCalCacheFile);
+                @mkdir($_SERVER['HOME'] . '/.config/pcalendar/');
+                touch($icsCalCacheFile);
+                $fp = fopen($icsCalCacheFile, 'a');
+                $icsCalCacheFile = $_SERVER['HOME'] . '/.config/pcalendar/cache.ics';
+                fwrite($fp, $fpTmp);
+                fclose($fp); 
+            }
             
             //$this->loadSyncCache(true);
             $this->loadSyncCache();
