@@ -1,7 +1,6 @@
-pcalendar (0.7.0-1) maverick; urgency=low
+pcalendar (0.8.0-1) maverick; urgency=low
 
-  * change interface to Persian
-  * Show next norouz time on right menu
-  * add/complete Persian events
+  * Some small changes applied
+  * Synchronizing with Google Calendar added (Thanks to Mostafa Mirmousavi)
 
  -- omidmottaghi <omidmr@gmail.com>  Tue, 13 Jul 2010 21:57:02 +0430

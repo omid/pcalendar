@@ -494,16 +494,16 @@ class Calendar
         if($mTo >= 6)
         {
             $dTo = 31 - persian_calendar::date('d', '', false);
-	}else
-	{
-	    $dTo = 30 - persian_calendar::date('d', '', false);
-	}
+    }else
+    {
+        $dTo = 30 - persian_calendar::date('d', '', false);
+    }
         if($mTo != 0)
         {
-	    $toNorouz = $mTo . ' ماه و ';
-	}
-	$toNorouz .= $dTo . ' روز مانده به ';
-	
+        $toNorouz = persian_calendar::persian_no($mTo) . ' ماه و ';
+    }
+    $toNorouz .= persian_calendar::persian_no($dTo) . ' روز مانده به ';
+    
         $msg = $toNorouz . 'تحویل سال ' . persian_calendar::persian_no($year);
         $this->notify($msg, persian_calendar::date('l d F Y ساعت H و i دقیقه و s ثانیه', $start));
     }
@@ -582,9 +582,9 @@ class Calendar
             //$this->loadSyncCache(true);
             $this->loadSyncCache();
         }
-        else{
+        /*else{
             $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هیچ تقویمی وارد نشده است. لطفن برای وارد نمودن تقویم از قسمت تنظیمات استفاده نمایید.');            
-        }
+        }*/
         return true;
     }
     
@@ -689,9 +689,8 @@ class Calendar
 
         $vboxSync->pack_start(new GtkLabel('دریافت و نمایش از تقویم‌های دیگر:'), 0, 0);
         $vboxSync->pack_start($scrolled_win, 0, 0);
-        $vboxSync->pack_start(new GtkLabel('شما می‌توانید آدرس تقویم‌های ICAL را برای نمایش رویداد‌های آن در کادر بالا بنویسید.'), 0, 0);
-        $vboxSync->pack_start(new GtkLabel('همچنین می‌توانید از چند تقویم به طور همزمان استفاده نمایید.'), 0, 0);
-        $vboxSync->pack_start(new GtkLabel('لطفن برای جدا نمودن تقویم‌ها از Enter استفاده نمایید.'), 0, 0);
+        $vboxSync->pack_start(new GtkLabel('شما می‌توانید برای نمایش رویدادهای تقویم‌های ICAL خود، آدرس آن‌ها را در کادر بالا وارد کنید.'), 0, 0);
+        $vboxSync->pack_start(new GtkLabel('لطفن برای وارد کردن چند تقویم، آدرس هر یک را در خطی جداگانه بنویسید.'), 0, 0);
         $vboxSync->pack_start($btnGoogleHelp, 0, 0);
         $this->add_new_tab($notebook, $vboxSync, 'ارتباطات');
         //End sync page
