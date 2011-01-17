@@ -436,7 +436,7 @@ class Calendar
         
         $showNotify->connect('activate', array($this, 'onShowNotify'));
         $showNorouzTime->connect('activate', array($this, 'onShowNorouzTime'));
-        $sync->connect('activate', array($this, 'onSync'));
+        $sync->connect('activate', array($this, 'onSync'), true);
         $preferences->connect('activate', array($this, 'onPreferences'));
         $about->connect('activate', array($this, 'onAbout'));
         $quit->connect('activate', array($this, 'onQuit'));
@@ -553,9 +553,9 @@ class Calendar
         @unlink('/tmp/today.svg');
     }
     
-    public function onSync()
+    public function onSync($msg = false)
     {
-        if(is_array($this->icsCals))
+        if(is_array($this->icsCals) && isset($this->calEvents))
         {            
             $syncRead = false;
             $fpTmp = '';
@@ -574,21 +574,29 @@ class Calendar
                 @mkdir($_SERVER['HOME'] . '/.config/pcalendar/');
                 touch($icsCalCacheFile);
                 $fp = fopen($icsCalCacheFile, 'a');
-                $icsCalCacheFile = $_SERVER['HOME'] . '/.config/pcalendar/cache.ics';
                 fwrite($fp, $fpTmp);
                 fclose($fp); 
             }
             
-            //$this->loadSyncCache(true);
             $this->loadSyncCache();
+            
+            if($msg)
+            {
+                if($syncRead)
+                {
+                    $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هماهنگ سازی با موفقیت انجام شد');            
+                }else
+                {
+                    $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'متاسفانه هماهنگ سازی انجام نشد. در اتصال به تقویم‌های دیگر مشکلی وجود دارد.');            
+                }
+            }
         }
-        /*else{
+        else{
             $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هیچ تقویمی وارد نشده است. لطفن برای وارد نمودن تقویم از قسمت تنظیمات استفاده نمایید.');            
-        }*/
+        }
         return true;
     }
     
-    //private function loadSyncCache($msg = false)
     private function loadSyncCache()
     {
         $icsCalCacheFile = $_SERVER['HOME'] . '/.config/pcalendar/cache.ics';
@@ -601,19 +609,6 @@ class Calendar
             $icsCalBuffer = preg_split("/(BEGIN:VEVENT)/", $icsCalBuffer);
             $this->calEvents = $icsCalBuffer;
         }
-        
-        /*
-        if($msg)
-        {
-            if(isset($this->calEvents))
-            {
-                $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'هماهنگ سازی با موفقیت انجام شد');            
-            }else
-            {
-                $this->notify('هماهنگ سازی با تقویم‌های دیگر', 'متاسفانه هماهنگ سازی انجام نشد. در اتصال به تقویم‌های دیگر مشکلی وجود دارد.');            
-            }
-        }
-        */ 
     }
     
     public function onPreferences()
@@ -822,7 +817,6 @@ class Calendar
             
             if(is_array($this->icsCals))
             {
-                //$this->loadSyncCache(false);
                 $this->loadSyncCache();
             }
         }
