@@ -1,6 +1,5 @@
-pcalendar (0.8.0-1) maverick; urgency=low
+pcalendar (0.8.0-2) maverick; urgency=low
 
-  * Some small changes applied
-  * Synchronizing with Google Calendar added (Thanks to Mostafa Mirmousavi)
+  * A small typo fixed in sync message
 
  -- omidmottaghi <omidmr@gmail.com>  Tue, 13 Jul 2010 21:57:02 +0430
