@@ -359,7 +359,7 @@ class Calendar
                 $this->month=12;
             }
         }
-        if($this->month>12){
+        elseif($this->month>12){
             $this->year++;
             if($this->checkYear()){
                 $this->month=1;
@@ -464,10 +464,48 @@ class Calendar
         $this->_leftmenu->set_border_width(5);
         $this->_leftmenu->set_keep_above(true);
         $this->_leftmenu->stick();
+        $this->_leftmenu->connect('scroll-event', array($this, 'onScroll'));
         
         $this->year = persian_calendar::date('Y', '', false);
         $this->month = persian_calendar::date('n', '', false);
         $this->day = persian_calendar::date('j', '', false);
+        $this->dateChangedInCalendar();
+    }
+
+    public function onScroll($obj, $e)
+    {
+        if($e->direction){ // SCROLL DOWN
+            $this->day--;
+            
+            if($this->day<1){
+                $this->month--;
+                
+                if($this->month<1){
+                    $this->year--;
+                    if($this->checkYear()){
+                        $this->month=12;
+                    }
+                }
+
+                $this->day = persian_calendar::date('t', persian_calendar::mktime(0,0,0,$this->month,1,$this->year), false);
+            }
+            
+        } else { // SCROLL UP
+            $this->day++;
+            
+            if($this->day > persian_calendar::date('t', '', false)){
+                $this->month++;
+                $this->day=1;
+                
+                if($this->month>12){
+                    $this->year++;
+                    if($this->checkYear()){
+                        $this->month=1;
+                    }
+                }
+            }
+        }
+        
         $this->dateChangedInCalendar();
     }
     
@@ -556,7 +594,7 @@ class Calendar
     public function onSync($msg = false)
     {
         if(is_array($this->icsCals) && isset($this->calEvents))
-        {            
+        {
             $syncRead = false;
             $fpTmp = '';
             foreach($this->icsCals as $icsCal)
