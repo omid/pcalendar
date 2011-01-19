@@ -493,7 +493,7 @@ class Calendar
         } else { // SCROLL UP
             $this->day++;
             
-            if($this->day > persian_calendar::date('t', '', false)){
+            if($this->day > persian_calendar::date('t', persian_calendar::mktime(0,0,0,$this->month,1,$this->year), false)){
                 $this->month++;
                 $this->day=1;
                 
