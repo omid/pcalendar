@@ -602,6 +602,7 @@ class Calendar
                 if($fpTmp .= @file_get_contents($icsCal))
                 {
                   $syncRead = true;
+                  echo '1';
                 }
             }            
             
@@ -613,7 +614,7 @@ class Calendar
                 touch($icsCalCacheFile);
                 $fp = fopen($icsCalCacheFile, 'a');
                 fwrite($fp, $fpTmp);
-                fclose($fp); 
+                fclose($fp);
             }
             
             $this->loadSyncCache();
@@ -794,6 +795,12 @@ class Calendar
                 $this->icsCals = array();
                 file_put_contents($syncConfigFile, json_encode(''));
             }
+            
+            $syncConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/sync.conf';        
+            if(file_exists($syncConfigFile)){
+                $this->icsCals = json_decode(file_get_contents($syncConfigFile));
+                $this->loadSyncCache();
+        }
             //End process of sync tab
 
         }
@@ -852,7 +859,7 @@ class Calendar
             }
         }
         
-        $syncConfigFile = $_SERVER['HOME'] . '/.config/pcalendar/sync.conf';        
+              
         if(file_exists($syncConfigFile)){
             $this->icsCals = json_decode(file_get_contents($syncConfigFile));
             
