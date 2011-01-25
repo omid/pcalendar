@@ -1,5 +1,5 @@
-pcalendar (0.8.0-3) maverick; urgency=low
+pcalendar (0.9.0-1) maverick; urgency=low
 
-  * A bug in iCAL sync fixed
+  * Scroll in calendar moves in days
 
  -- omidmottaghi <omidmr@gmail.com>  Tue, 13 Jul 2010 21:57:02 +0430
