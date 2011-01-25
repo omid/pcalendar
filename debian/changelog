@@ -1,5 +1,5 @@
-pcalendar (0.8.0-2) maverick; urgency=low
+pcalendar (0.8.0-3) maverick; urgency=low
 
-  * A small typo fixed in sync message
+  * A bug in iCAL sync fixed
 
  -- omidmottaghi <omidmr@gmail.com>  Tue, 13 Jul 2010 21:57:02 +0430
