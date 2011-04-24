@@ -83,155 +83,11 @@ class persian_calendar
         for ($i = 0; $g_day_no >= $g_days_in_month[$i] + ($i == 1 && $leap); $i++){
             $g_day_no -= $g_days_in_month[$i] + ($i == 1 && $leap);
         }
+        
         $gm = $i+1;
         $gd = $g_day_no+1;
 
         return array($gy, $gm, $gd);
-    }
-
-
-    public function strftime($format, $timestamp='', $persian = true)
-    {
-        if($timestamp==''){
-            $timestamp = mktime();
-        }
-
-        $g_d=date('j', $timestamp);
-        $g_m=date('n', $timestamp);
-        $g_y=date('Y', $timestamp);
-
-        list($jy, $jm, $jd, $j_all_days) = self::g2p($g_y, $g_m, $g_d);
-
-        $j_month_name = array('', 'فروردین', 'اردیبهشت', 'خرداد', 'تیر',
-                'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند');
-        $j_week_name = array('Saturday' => 'شنبه',
-                            'Sunday' => 'یک‌شنبه',
-                            'Monday' => 'دوشنبه',
-                            'Tuesday' => 'سه‌شنبه',
-                            'Wednesday' => 'چهارشنبه',
-                            'Thursday' => 'پنج‌شنبه',
-                            'Friday' => 'جمعه',
-                            'Sat' => 'ش',
-                            'Sun' => 'ی',
-                            'Mon' => 'د',
-                            'Tue' => 'س',
-                            'Wed' => 'چ',
-                            'Thu' => 'پ',
-                            'Fri' => 'ج');
-        $j_week_number = array('Sat' => '1',
-                               'Sun' => '2',
-                               'Mon' => '3',
-                               'Tue' => '4',
-                               'Wed' => '5',
-                               'Thu' => '6',
-                               'Fri' => '7');
-
-        // calculate string
-        $output_str='';
-
-        for ($i=0; $i<strlen($format); $i++){
-
-            if($format[$i]=='%'){
-                $i++;
-                switch($format[$i]){
-                    case 'a':
-                        $output_str.=$j_week_name[date('D', $timestamp)];
-                        break;
-                    case 'A':
-                        $output_str.=$j_week_name[date('l', $timestamp)];
-                        break;
-                    case 'b':
-                    case 'B':
-                    case 'h':
-                        $output_str.=$j_month_name[$jm];
-                        break;
-                    case 'c':
-                        $output_str.=self::persian_strftime_utf('%y/%m/%d %I:%M:%S', $timestamp);
-                        break;
-                    case 'C':
-                        $output_str.=floor($jy/100);
-                        break;
-                    case 'd':
-                        if($jd<10) $output_str.='0'.$jd; else $output_str.=$jd;
-                        break;
-                    case 'D':
-                        $output_str.=$jy.'/'.$jm.'/'.$jd;
-                        break;
-                    case 'e':
-                        if($jd<10) $output_str.=' '.$jd; else $output_str.=$jd;
-                        break;
-                    case 'H':
-                        $output_str.=date('H', $timestamp);
-                        break;
-                    case 'I':
-                        $output_str.=date('h', $timestamp);
-                        break;
-                    case 'j':
-                        $output_str.=sprintf('%03d', $j_all_days);
-                        break;
-                    case 'm':
-                        if($jm<10) $output_str.='0'.$jm; else $output_str.=$jm;
-                        break;
-                    case 'M':
-                        $output_str.=date('i', $timestamp);
-                        break;
-                    case 'n':
-                        $output_str.="\n";
-                        break;
-                    case 'r':
-                    case 'p':
-                        if(date('a',$timestamp)=='pm') $output_str.='بعد از ظهر'; else $output_str.='قبل از ظهر';
-                        break;
-                    case 'R':
-                        $output_str.=strftime('%R', $timestamp);
-                        break;
-                    case 'S':
-                        $output_str.=date('s', $timestamp);
-                        break;
-                    case 't':
-                        $output_str.="\t";
-                        break;
-                    case 'U':
-                    case 'V':
-                    case 'W':
-                        $output_str.=sprintf('%02d', floor(($j_all_days+1)/7));
-                        break;
-                    case 'u':
-                    case 'w':
-                        $output_str.=$j_week_number[date('D', $timestamp)];
-                        break;
-                    case 'x':
-                        $output_str.=self::persian_strftime_utf('%y/%m/%d', $timestamp);
-                        break;
-                    case 'X':
-                        $output_str.=self::persian_strftime_utf('%I:%M:%S', $timestamp);
-                        break;
-                    case 'g':
-                    case 'y':
-                        $output_str.=$jy-(floor($jy/100)*100);
-                        break;
-                    case 'G':
-                    case 'Y':
-                        $output_str.=$jy;
-                        break;
-                    case 'z':
-                    case 'Z':
-                        $output_str.=strftime('%z', $timestamp);
-                        break;
-                    case '%':
-                        $output_str.='%';
-                        break;
-                }
-            }else{
-                $output_str.=$format[$i];
-            }
-        }
-
-        if($persian){
-            return self::persian_no($output_str);
-        }else{
-            return $output_str;
-        }
     }
 
 
@@ -248,10 +104,10 @@ class persian_calendar
         list($jy, $jm, $jd, $j_all_days) = self::g2p($g_y, $g_m, $g_d);
 
         $j_days_in_month = array(0, 31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29);
-        $leap = 0;
-        if ($g_m>1 && (($g_y%4==0 && $g_y%100!=0) || ($g_y%400==0))){
+        $leap = (((((($jy - (($jy > 0) ? 474 : 473)) % 2820) + 474) + 38) * 682) % 2816) < 682;
+        var_dump($leap);
+        if ($leap){
             $j_days_in_month[12]++;
-            $leap = 1;
         }
 
         $j_month_name = array('', 'فروردین', 'اردیبهشت', 'خرداد', 'تیر',
@@ -322,7 +178,7 @@ class persian_calendar
                         $output_str.=$j_days_in_month[$jm];
                         break;
                     case 'L':
-                            $output_str.=$leap;
+                            $output_str.=(integer)$leap;
                         break;
                     case 'o':
                     case 'Y':
