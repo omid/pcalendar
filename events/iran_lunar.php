@@ -1,7 +1,7 @@
 <?php
 
 $events_info['iran_lunar'] = array(
-    'name' => 'مناسبت‌های عربی و رسمی ایران'
+    'name' => 'مناسبت‌های مذهبی ایران'
 );
 
 $l_events = array (

@@ -2,7 +2,7 @@
 // copyright پژوهش‌های ایرانی at http://ghiasabadi.com/
 
 $events_info['persian'] = array(
-    'name' => 'مناسبت‌های پارسی',
+    'name' => 'مناسبت‌های ملی',
 );
 
 $p_events = array (

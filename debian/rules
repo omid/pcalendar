@@ -12,9 +12,7 @@ PKG_VERSION=0.0.1
 
 override_dh_install:
 	dh_install
-	mkdir -p debian/$(PKG_NAME)/usr/share/pcalendar debian/$(PKG_NAME)/usr/bin debian/$(PKG_NAME)/usr/share/applications # debian/$(PKG_NAME)/usr/lib/bonobo/servers
-#	cp GNOME_PCalendarApplet.server debian/$(PKG_NAME)/usr/lib/bonobo/servers/
+	mkdir -p debian/$(PKG_NAME)/usr/share/pcalendar debian/$(PKG_NAME)/usr/bin debian/$(PKG_NAME)/usr/share/applications
 	cp pcalendar.desktop debian/$(PKG_NAME)/usr/share/applications
 	cp -R events pix *.php pcalendar.desktop debian/$(PKG_NAME)/usr/share/pcalendar
-#	ln -fs /usr/share/pcalendar/pcalendar.php debian/$(PKG_NAME)/usr/bin/pcalendar
 
