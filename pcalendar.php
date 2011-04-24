@@ -52,6 +52,9 @@ class Calendar
             $this->_tray->set_from_file('/tmp/today.svg');
             
             $this->_date = date('Y/m/d');
+
+            // sleep... till icon of tray changed!
+            sleep(1);
             
             $this->notify(persian_calendar::date('l d F Y'), $today['title']);
 
