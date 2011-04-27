@@ -1,7 +1,5 @@
-pcalendar (0.9.0-1) maverick; urgency=low
+pcalendar (0.9.0-2) natty; urgency=low
 
-  * Scroll in calendar moves in days
-  * Rename calendars
-  * Some small bugs fixed
+  * version in about dialog fixed :-)
 
  -- omidmottaghi <omidmr@gmail.com>  Tue, 13 Jul 2010 21:57:02 +0430

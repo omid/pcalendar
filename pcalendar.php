@@ -52,9 +52,6 @@ class Calendar
             $this->_tray->set_from_file('/tmp/today.svg');
             
             $this->_date = date('Y/m/d');
-
-            // sleep... till icon of tray changed!
-            sleep(1);
             
             $this->notify(persian_calendar::date('l d F Y'), $today['title']);
 
@@ -560,7 +557,7 @@ class Calendar
         $dlgAbout->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
         
         $dlgAbout->set_name('Persian Calendar');
-        $dlgAbout->set_version('0.8');
+        $dlgAbout->set_version('0.9');
          
         $dlgAbout->set_comments('Persian Calendar is a calendar for Persians.');
         $dlgAbout->set_copyright('GPL version 3');
