@@ -1,5 +1,6 @@
-pcalendar (0.9.0-2) natty; urgency=low
+pcalendar (0.10.0-2) oneiric; urgency=low
 
-  * version in about dialog fixed :-)
+  * make it compatible with Unity (Thanks to Mostafa Mirmousavi)
+  * fix a problem in events
 
- -- omidmottaghi <omidmr@gmail.com>  Tue, 13 Jul 2010 21:57:02 +0430
+ -- omidmottaghi <omidmr@gmail.com>  Mon, 5 Sep 2011 21:57:02 +0330

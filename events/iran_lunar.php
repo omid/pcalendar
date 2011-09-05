@@ -11,7 +11,7 @@ $l_events = array (
     array('day' => 98, 'title' => 'ولادت امام علی', 'holiday' => true),
     array('day' => 112, 'title' => 'مبعث حضرت رسول اکرم', 'holiday' => true),
     array('day' => 129, 'title' => 'ولادت حضرت قائم', 'holiday' => true),
-    array('day' => 165, 'title' => 'شهادت حضرت علی', 'holiday' => true),
+    array('day' => 164, 'title' => 'شهادت حضرت علی', 'holiday' => true),
     array('day' => 174, 'title' => 'عید فطر', 'holiday' => true),
     array('day' => 198, 'title' => 'شهادت اما جعفر صادق', 'holiday' => true),
     array('day' => 242, 'title' => 'عید قربان', 'holiday' => true),

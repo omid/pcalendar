@@ -557,7 +557,7 @@ class Calendar
         $dlgAbout->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
         
         $dlgAbout->set_name('Persian Calendar');
-        $dlgAbout->set_version('0.9');
+        $dlgAbout->set_version('0.10');
          
         $dlgAbout->set_comments('Persian Calendar is a calendar for Persians.');
         $dlgAbout->set_copyright('GPL version 3');
