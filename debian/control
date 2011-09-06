@@ -8,6 +8,6 @@ Homepage: https://github.com/omid/pcalendar
 
 Package: pcalendar
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, php5-cairo, php5-gtk2, php5-cli, ttf-dejavu-core, ttf-freefarsi, php5-dbus
+Depends: ${shlibs:Depends}, ${misc:Depends}, php5-cairo, php5-gtk2, php5-cli, ttf-dejavu-core, ttf-freefarsi, php5-dbus, sed
 Description: Persian Calendar is a calendar for Persians
  Persian Calendar is a calendar for Persians.

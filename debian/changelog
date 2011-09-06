@@ -1,6 +1,5 @@
-pcalendar (0.10.0-2) oneiric; urgency=low
+pcalendar (0.10.0-4) oneiric; urgency=low
 
-  * make it compatible with Unity (Thanks to Mostafa Mirmousavi)
-  * fix a problem in events
+  * fix a problem in postinstall script and make it compatible with "sh"
 
- -- omidmottaghi <omidmr@gmail.com>  Mon, 5 Sep 2011 21:57:02 +0330
+ -- omidmottaghi <omidmr@gmail.com>  Wed, 7 Sep 2011 21:57:02 +0330

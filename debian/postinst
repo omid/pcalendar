@@ -25,7 +25,7 @@ case "$1" in
         if [ "$(dpkg -s unity | grep Status)" = "Status: install ok installed" ]; then
         	if [ ! "$(gsettings get com.canonical.Unity.Panel systray-whitelist |grep pcalendar)" ]; then
 	            WHITELIST="$(gsettings get com.canonical.Unity.Panel systray-whitelist)"
-	            gsettings set com.canonical.Unity.Panel systray-whitelist "${WHITELIST/[/['pcalendar', }"
+	            gsettings set com.canonical.Unity.Panel systray-whitelist "`echo $WHITELIST | sed "s/\[/\[\'pcalendar\', /g"`"
 	        fi
         fi
     ;;
