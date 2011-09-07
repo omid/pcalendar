@@ -105,7 +105,7 @@ class persian_calendar
 
         $j_days_in_month = array(0, 31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29);
         $leap = (((((($jy - (($jy > 0) ? 474 : 473)) % 2820) + 474) + 38) * 682) % 2816) < 682;
-        var_dump($leap);
+        
         if ($leap){
             $j_days_in_month[12]++;
         }
