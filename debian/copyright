@@ -1,6 +1,6 @@
 This work was packaged for Debian by:
 
-    omidmottaghi <omidmr@gmail.com> on Tue, 13 Jul 2010 21:57:02 +0430
+    omidmottaghi <omidmr@gmail.com> on Fri, 16 Sep 2011 21:57:02 +0430
 
 Upstream Author(s):
 
@@ -8,7 +8,7 @@ Upstream Author(s):
 
 Copyright:
 
-    <Copyright (C) 2010 Omid Mottaghi>
+    <Copyright (C) 2011 Omid Mottaghi>
 
 License:
 
@@ -16,7 +16,7 @@ License:
 
 The Debian packaging is:
 
-    Copyright (C) 2010 omidmottaghi <omidmr@gmail.com>
+    Copyright (C) 2011 omidmottaghi <omidmr@gmail.com>
 
 # Please chose a license for your packaging work. If the program you package
 # uses a mainstream license, using the same license is the safest choice.
