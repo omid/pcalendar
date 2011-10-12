@@ -13,7 +13,7 @@
    height="128"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.0 r9654"
+   inkscape:version="0.48.2 r9819"
    sodipodi:docname="normalday.svg">
   <defs
      id="defs4">
@@ -53,15 +53,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2.8284271"
-     inkscape:cx="3.3189123"
+     inkscape:cx="-60.143922"
      inkscape:cy="92.993477"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1031"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
+     inkscape:window-height="1030"
+     inkscape:window-x="-1"
+     inkscape:window-y="26"
      inkscape:window-maximized="1"
      showguides="true"
      inkscape:guide-bbox="true" />
@@ -87,17 +87,17 @@
        id="text3900"
        y="893.14575"
        x="74.004463"
-       style="font-size:84.60752105999999628px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#eae3d1;fill-opacity:1;stroke:#eae3d1;font-family:Sans;stroke-opacity:1;stroke-width:2.00000004000000020;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter2985)"
+       style="font-size:84.60752105999999628px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#cccccc;fill-opacity:1;stroke:#cccccc;font-family:Sans;stroke-opacity:1;stroke-width:2.00000004000000020;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter2985)"
        xml:space="preserve"
        transform="scale(0.86681151,1.1536533)"><tspan
-         style="font-size:78.71893310999998050px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;letter-spacing:-1.96797322999999991px;text-anchor:middle;fill:#eae3d1;fill-opacity:1;stroke:#eae3d1;stroke-width:2.00000004000000020;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
+         style="font-size:78.71893310999998050px;font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;letter-spacing:-1.96797322999999991px;text-anchor:middle;fill:#cccccc;fill-opacity:1;stroke:#cccccc;stroke-width:2.00000004000000020;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;font-family:DejaVu Sans;-inkscape-font-specification:DejaVu Sans Bold"
          y="893.14575"
          x="73.020477"
          id="tspan3902"
          sodipodi:role="line">۱۰</tspan></text>
     <path
        inkscape:connector-curvature="0"
-       style="fill:#eae3d1;fill-opacity:1;stroke:#000000;stroke-width:2.01431394;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:#cccccc;fill-opacity:1;stroke:#000000;stroke-width:2.01431394000000008;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="m 19.171875,929.36218 c -7.846428,0 -14.15625,6.30847 -14.15625,14.15625 l 0,89.65627 c 0,7.8478 6.309822,14.1875 14.15625,14.1875 l 89.656255,0 c 7.84642,0 14.15625,-6.3397 14.15625,-14.1875 l 0,-89.65627 c 0,-7.84778 -6.30983,-14.15625 -14.15625,-14.15625 l -89.656255,0 z m 11.21875,36.5 67.21875,0 c 5.230955,0 9.437505,4.2369 9.437505,9.46875 l 0,48.84377 c 0,5.2318 -4.20655,9.4375 -9.437505,9.4375 l -67.21875,0 c -5.230952,0 -9.4375,-4.2057 -9.4375,-9.4375 l 0,-48.84377 c 0,-5.23185 4.206548,-9.46875 9.4375,-9.46875 z"
        id="rect3896" />
   </g>
