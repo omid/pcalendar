@@ -1,6 +1,5 @@
-pcalendar (0.10.0-6) oneiric; urgency=low
+pcalendar (0.10.0-7) oneiric; urgency=low
 
-  * fix a problem in postinstall script
-  * add check for Unity in pcalendar.php
+  * add notification icon to top panel of gnome-shell
 
- -- omidmottaghi <omidmr@gmail.com>  Fri, 16 Sep 2011 21:57:02 +0330
+ -- omidmottaghi <omidmr@gmail.com>  Fri, 12 Oct 2011 21:57:02 +0330

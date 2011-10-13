@@ -13,10 +13,46 @@ $result = exec('if [ "$(dpkg -s unity | grep Status)" = "Status: install ok inst
     fi
 fi
 echo ok');
+
 if($result == 'restart'){
-    new Restart;
+    new URestart;
     exit;
 }
+
+// add icon to gnome-shell, if not exists!
+$result = exec('if [ -e ~/.local/share/gnome-shell/extensions -a ! -e ~/.local/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org ]
+        then
+          mkdir ~/.local/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org
+          echo "const Panel = imports.ui.panel;
+const StatusIconDispatcher = imports.ui.statusIconDispatcher;
+
+function init() {
+    StatusIconDispatcher.STANDARD_TRAY_ICON_IMPLEMENTATIONS["pcalendar"] = "pcalendar";
+}
+
+function enable() {}
+
+function disable() {}" > ~/.local/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org/extension.js
+
+          echo "{
+"uuid": "pcalendar@gnome-shell-extensions.gnome.org",
+"name": "Persian Calendar",
+"description": "Adds persian calendar menu",
+"shell-version": [ "3.2" ],
+"localedir": "/usr/share/locale",
+"url": "https://github.com/omidmottaghi/pcalendar"
+}" > ~/.local/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org/metadata.json
+
+          echo "" > ~/.local/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org/stylesheet.css
+          echo restart
+          exit 0
+        fi
+echo ok');
+
+if($result == 'restart'){
+    new GRestart;
+}
+
 //////////////////////////////////////////////////
 
 require_once('/usr/share/pcalendar/persian_calendar.php');
@@ -967,44 +1003,29 @@ class Calendar
     }
 }
 
-class Restart
+class URestart
 { 
      
     public function __construct()
     {
-        // Control over normal dialogs are better!
-        // Maybe we switch to them later!
-        
-        /*$md = new GtkDialog('پیام');
-        $md->set_icon_from_file('/usr/share/pcalendar/pix/icon.svg');
-        $md->set_default_size(10,10);
-        $md->set_modal(true);
-        $md->set_skip_pager_hint(true);
-
-        $label = new GtkLabel("Because of Unity, to see icon of the Persian Calendar in the Unity systray, you need to restart Compiz or logout from and login to your account.\n\nIf you press \"OK\", we will restart Compiz for you, and if press \"Cancel\" we will close Persian Calendar and run it automatically after your next login.\n\nIf you don't use Unity, or you are using Metacity, press \"Cancel\".");
-        $label->set_width_chars(50);
-        $label->set_line_wrap(true);
-        
-        $vbox = new GtkVBox();
-        $vbox->pack_start($label);
-        $md->add_buttons(array(
-            Gtk::STOCK_CANCEL, Gtk::RESPONSE_CANCEL,
-            Gtk::STOCK_OK, Gtk::RESPONSE_OK,
-        )); 
-        $md->vbox->pack_start($vbox);
-        $md->show_all();*/
-
-        $md = new GtkMessageDialog(null, 0, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK_CANCEL, "Because of Unity, to see icon of the Persian Calendar in the Unity systray, you need to restart Compiz or logout from and login to your account.\n\nIf you press \"OK\", we will restart Compiz for you, and if press \"Cancel\" we will close Persian Calendar and run it automatically after your next login.\n\nIf you don't use Unity, or you are using Metacity, press \"Cancel\".");
+        $md = new GtkMessageDialog(null, 0, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, "برای دیدن شکلک تقویم در منوی بالای یونیتی، باید یونیتی را از نو راه‌اندازی کنید. \n برای انجام این کار باید دوباره وارد سیستم شوید.");
         $md->set_title('پیام');
         $md->set_keep_above(true);
         $res = $md->run();
         $md->destroy();
-
-        if ($res == Gtk::RESPONSE_OK) {
-            exec('compiz --replace');
-        }
-        copy('/usr/share/pcalendar/pcalendar.desktop', $_SERVER['HOME'] . '/.config/autostart/pcalendar.desktop');
     }
 }
 
+class GRestart
+{ 
+     
+    public function __construct()
+    {
+        $md = new GtkMessageDialog(null, 0, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, "برای دیدن شکلک تقویم در منوی بالای گنوم، باید گنوم-شل را از نو راه‌اندازی کنید. \n برای انجام این کار دکمه‌های Alt+F2 را فشار دهید و حرف r را تایپ کنید و دکمه‌ی enter را بزنید.");
+        $md->set_title('پیام');
+        $md->set_keep_above(true);
+        $res = $md->run();
+        $md->destroy();
+    }
+}
 $app = new Calendar();
