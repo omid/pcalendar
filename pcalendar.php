@@ -20,30 +20,30 @@ if($result == 'restart'){
 }
 
 // add icon to gnome-shell, if not exists!
-$result = exec('if [ -e ~/.local/share/gnome-shell/extensions -a ! -e ~/.local/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org ]
+$result = exec('if [ -e ~/.local/share/gnome-shell/extensions -a ! -e ~/.local/share/gnome-shell/extensions/pcalendar@oxygenws.com ]
         then
-          mkdir ~/.local/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org
+          mkdir ~/.local/share/gnome-shell/extensions/pcalendar@oxygenws.com
           echo "const Panel = imports.ui.panel;
 const StatusIconDispatcher = imports.ui.statusIconDispatcher;
 
 function init() {
-    StatusIconDispatcher.STANDARD_TRAY_ICON_IMPLEMENTATIONS["pcalendar"] = "pcalendar";
+    StatusIconDispatcher.STANDARD_TRAY_ICON_IMPLEMENTATIONS[\\"pcalendar\\"] = \\"pcalendar\\";
 }
 
 function enable() {}
 
-function disable() {}" > ~/.local/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org/extension.js
+function disable() {}" > ~/.local/share/gnome-shell/extensions/pcalendar@oxygenws.com/extension.js
 
           echo "{
-"uuid": "pcalendar@gnome-shell-extensions.gnome.org",
-"name": "Persian Calendar",
-"description": "Adds persian calendar menu",
-"shell-version": [ "3.2" ],
-"localedir": "/usr/share/locale",
-"url": "https://github.com/omidmottaghi/pcalendar"
-}" > ~/.local/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org/metadata.json
+\\"uuid\\": \\"pcalendar@oxygenws.com\\",
+\\"name\\": \\"Persian Calendar\\",
+\\"description\\": \\"Adds persian calendar menu\\",
+\\"shell-version\\": [ \\"3.2\\" ],
+\\"localedir\\": \\"/usr/share/locale\\",
+\\"url\\": \\"https://github.com/omidmottaghi/pcalendar\\"
+}" > ~/.local/share/gnome-shell/extensions/pcalendar@oxygenws.com/metadata.json
 
-          echo "" > ~/.local/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org/stylesheet.css
+          echo "" > ~/.local/share/gnome-shell/extensions/pcalendar@oxygenws.com/stylesheet.css
           echo restart
           exit 0
         fi

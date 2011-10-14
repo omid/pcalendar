@@ -21,10 +21,6 @@ set -e
 
 case "$1" in
     purge|remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
-        if [ -e /usr/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org ]
-        then
-          rm -rf /usr/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org
-        fi
 
 #        if [ "$(dpkg -s unity | grep Status)" = "Status: install ok installed" ]; then
 #           if [ "$(gsettings get com.canonical.Unity.Panel systray-whitelist |grep pcalendar)" ]; then

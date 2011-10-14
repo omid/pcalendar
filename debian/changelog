@@ -1,4 +1,4 @@
-pcalendar (0.10.0-7) oneiric; urgency=low
+pcalendar (0.10.0-8) oneiric; urgency=low
 
   * add notification icon to top panel of gnome-shell
 

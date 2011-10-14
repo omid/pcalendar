@@ -14,11 +14,6 @@ case "$1" in
           rm -rf /usr/bin/pcalendar.php
         fi
 
-	if [ -e /usr/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org ]
-        then
-          rm -rf /usr/share/gnome-shell/extensions/pcalendar@gnome-shell-extensions.gnome.org
-        fi
-
     ;;
 esac
 
